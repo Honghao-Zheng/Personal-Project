@@ -1,0 +1,29 @@
+
+<%- include("partials/header") -%>
+<div class="container-fluid">
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <%= date%>
+      </div>
+      <div class="col">
+      <%= day%>
+      </div>
+    </div>
+
+  </div>
+  <form action="/writting" method="post">
+  <div >
+      <p>
+        <%= post%>
+        </p>
+  </div>
+
+  <div >
+    <button type="submit" >change</button>
+  </div>
+  </form>
+</div>
+
+<%- include("partials/footer") -%>
