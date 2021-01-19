@@ -20,13 +20,21 @@ exports.getDay=function(){
   };
 
 
-exports.findWeekday=function(date){
-  const year=date.slice(0,4);
-  const month=date.slice(5,7);
-  const day=date.slice(8,10);
-const event = new Date(Date.UTC(year, month, day));
-const options = { weekday: 'long'};
 
-return event.toLocaleDateString("en-UK", options);
-// expected output: Thursday, December 20, 2012 (varies according to default locale)
+
+exports.findDateString=function(numericDate){
+  const year=numericDate.slice(0,4);
+  const month=numericDate.slice(5,6)+String(Number(numericDate.slice(6,7))-1);
+  const day=numericDate.slice(8,10);
+  const event = new Date(Date.UTC(year, month, day));
+  console.log([year, month, day]);
+  const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+  const optionsDay = { weekday: 'long'};
+  const date=event.toLocaleDateString("en-UK", optionsDate);
+  const weekday=event.toLocaleDateString("en-UK", optionsDay);
+  return {date:date,weekday:weekday};
+};
+
+exports.numericDate=function(dateString){
+  return new Date(dateString).toISOString().slice(0,10);
 };

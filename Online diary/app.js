@@ -17,10 +17,8 @@ let todayDay=date.getDay();
 let todayDate=date.getDate();
 const postsSchema={
   date:String,
-  day:String,
   post:String
 };
-
 
 
 const Post=mongoose.model("Post",postsSchema);
@@ -30,54 +28,85 @@ app.get("/",function(req,res){
   res.render("home");
 });
 
-app.get("/writting",function(req,res){
-  res.render("writting",{day:todayDay,date:todayDate});
+app.get("/write",function(req,res){
+  res.render("write",{day:todayDay,date:todayDate,post:""});
 });
 
-app.post("/writting",function(req,res){
-  const post=new Post({
-    date:req.body.numericDate,
-    day:date.findWeekday(req.body.numericDate),
-    post:req.body.content
+app.post("/write",function(req,res){
+
+  const dateString=req.body.dateString;
+  const numericDate=date.numericDate(dateString);
+  const content=req.body.content;
+
+  Post.findOne({date:numericDate},function(err,foundList){
+    if(!err){
+      if (!foundList){
+        const post=new Post({
+          date:numericDate,
+          post:content
+        });
+        post.save();
+
+      }else{
+        foundList.post=content;
+        foundList.save();
+      }
+    }
   });
-  post.save();
-  res.render("writting",{day:todayDay,date:todayDate});
+res.redirect("/read/"+numericDate);
 });
 
 
 
-app.get("/managing", function(req,res){
-  res.render("managing");
+app.get("/manage", function(req,res){
+  res.render("manage");
 });
 
-app.post("/mamaging", function(req,res){
+app.post("/mamage", function(req,res){
   const postDate=req.body.date;
-  res.redirect("/reading/"+postDate);
+
+  res.redirect("/read/"+postDate);
 });
 
 
 
-app.get("/reading/:diaryDate",function(req,res){
-  const diaryDate=req.params.diaryDate;
-  Post.findOne({date:diaryDate},function(err,foundList){
+app.get("/read/:postDate",function(req,res){
+  const numericDate=req.params.postDate;
+  console.log(numericDate);
+
+  Post.findOne({date:numericDate},function(err,foundList){
     if (!err){
       if (!foundList){
         const newDiary=new Post({
-          date:diaryDate,
-          day:date.findWeekday(diaryDate),
+          date:numericDate,
           post:defaultPost
         });
       newDiary.save();
-      res.redirect("/reading/"+diaryDate);
+      res.redirect("/read/"+numericDate);
     }else{
-      res.render("reading",{date:foundList.date, day:foundList.day, post:foundList.post});
+      const dateString=date.findDateString(numericDate).date;
+      const weekday=date.findDateString(numericDate).weekday;
+      res.render("read",{date:dateString, day:weekday, post:foundList.post});
     }
     }
   });
 });
 
-app.post("/reading",function(req,res){
-  const diaryDate=req.params.date;
+app.post("/read",function(req,res){
+  const dateString=req.body.dateString;
+  console.log(dateString);
+  console.log(date.numericDate(dateString));
+  const numericDate=date.numericDate(dateString);
+  Post.findOne({date:numericDate},function(err,foundList){
+    if (!err){
+      if (!foundList){
+        console.log("did not find list");
+      }else{
+        const weekday=date.findDateString(numericDate).weekday;
+        res.render("write",{date:dateString, day:weekday, post:foundList.post});
+      }
+    }
+  });
 });
 
 app.listen(3000,function(){

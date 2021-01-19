@@ -13,14 +13,14 @@
     </div>
 
   </div>
-  <form action="/writting" method="post">
+  <form action="/write" method="post">
   <div >
-      <textarea class="form-control" rows="8" name="content" ></textarea>
+      <textarea class="form-control" rows="8" name="content" ><%= post%></textarea>
   </div>
 
   <div >
-    <% var todayDate=new Date(date).toISOString().slice(0,10)  %>
-    <button type="submit" name="numericDate" value="<%= todayDate%> ">save</button>
+
+    <button type="submit" name="dateString" value="<%= date%> ">save</button>
   </div>
   </form>
 </div>

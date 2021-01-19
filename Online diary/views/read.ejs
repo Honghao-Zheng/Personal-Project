@@ -11,9 +11,8 @@
       <%= day%>
       </div>
     </div>
-
   </div>
-  <form action="/writting" method="post">
+
   <div >
       <p>
         <%= post%>
@@ -21,11 +20,11 @@
   </div>
 
   <div >
-    <form action="/reading" method="post">
-      <button type="submit" name="editDate" value="<%= date%>">change</button>
+    <form action="/read" method="post">
+      <button type="submit" name="dateString" value="<%= date%>">change</button>
     </form>
   </div>
-  </form>
+
 </div>
 
 <%- include("partials/footer") -%>
