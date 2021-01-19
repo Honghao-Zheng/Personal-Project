@@ -1,1 +1,1 @@
-version 2
+This is a collections of personal projects
