@@ -27,7 +27,6 @@ exports.findDateString=function(numericDate){
   const month=numericDate.slice(5,6)+String(Number(numericDate.slice(6,7))-1);
   const day=numericDate.slice(8,10);
   const event = new Date(Date.UTC(year, month, day));
-  console.log([year, month, day]);
   const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
   const optionsDay = { weekday: 'long'};
   const date=event.toLocaleDateString("en-UK", optionsDate);

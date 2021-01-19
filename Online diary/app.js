@@ -64,7 +64,6 @@ app.get("/manage", function(req,res){
 
 app.post("/mamage", function(req,res){
   const postDate=req.body.date;
-
   res.redirect("/read/"+postDate);
 });
 
@@ -72,8 +71,6 @@ app.post("/mamage", function(req,res){
 
 app.get("/read/:postDate",function(req,res){
   const numericDate=req.params.postDate;
-  console.log(numericDate);
-
   Post.findOne({date:numericDate},function(err,foundList){
     if (!err){
       if (!foundList){
@@ -94,8 +91,6 @@ app.get("/read/:postDate",function(req,res){
 
 app.post("/read",function(req,res){
   const dateString=req.body.dateString;
-  console.log(dateString);
-  console.log(date.numericDate(dateString));
   const numericDate=date.numericDate(dateString);
   Post.findOne({date:numericDate},function(err,foundList){
     if (!err){
