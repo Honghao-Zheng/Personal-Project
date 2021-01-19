@@ -28,12 +28,11 @@ app.get("/",function(req,res){
   res.render("home");
 });
 
-app.get("/write",function(req,res){
-  res.render("write",{day:todayDay,date:todayDate,post:""});
-});
+// app.get("/write/today",function(req,res){
+//   res.render("write",{day:todayDay,date:todayDate,post:""});
+// });
 
 app.post("/write",function(req,res){
-
   const dateString=req.body.dateString;
   const numericDate=date.numericDate(dateString);
   const content=req.body.content;
@@ -90,19 +89,32 @@ app.get("/read/:postDate",function(req,res){
 });
 
 app.post("/read",function(req,res){
-  const dateString=req.body.dateString;
-  const numericDate=date.numericDate(dateString);
-  Post.findOne({date:numericDate},function(err,foundList){
-    if (!err){
-      if (!foundList){
-        console.log("did not find list");
-      }else{
-        const weekday=date.findDateString(numericDate).weekday;
-        res.render("write",{date:dateString, day:weekday, post:foundList.post});
-      }
+     const dateString=req.body.dateString;
+     const numericDate=date.numericDate(dateString);
+     res.redirect("/write/"+numericDate);
+   });
+
+
+
+app.get("/write/:postDate",function(req,res){
+    const numericDate=req.params.postDate;
+    if (numericDate==="today"){
+      res.render("write",{date:todayDate, day:todayDay, post:""});
     }
-  });
+      Post.findOne({date:numericDate},function(err,foundList){
+        if (!err){
+          if (!foundList){
+            console.log("did not find list");
+          }else{
+            const weekday=date.findDateString(numericDate).weekday;
+            const dateString=date.findDateString(numericDate).date;
+            res.render("write",{date:dateString, day:weekday, post:foundList.post});
+          }
+        }
+      });
 });
+
+
 
 app.listen(3000,function(){
   console.log("start server port 3000");
