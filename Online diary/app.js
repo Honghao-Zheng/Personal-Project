@@ -12,9 +12,8 @@ app.use(express.static("public"));
 mongoose.connect("mongodb://localhost:27017/diaryDB",{useNewUrlParser: true ,useUnifiedTopology: true });
 app.use(bodyParser.urlencoded({extended:true}));
 
-
-let todayDay=date.getDay();
-let todayDate=date.getDate();
+let todayDate=date.numericDate(date.getDate());
+console.log(todayDate);
 const postsSchema={
   date:String,
   post:String
@@ -28,9 +27,9 @@ app.get("/",function(req,res){
   res.render("home");
 });
 
-// app.get("/write/today",function(req,res){
-//   res.render("write",{day:todayDay,date:todayDate,post:""});
-// });
+app.get("/write",function(req,res){
+  res.redirect("/write/"+todayDate);
+});
 
 app.post("/write",function(req,res){
   const dateString=req.body.dateString;
@@ -106,13 +105,11 @@ app.post("/read",function(req,res){
 
 app.get("/write/:postDate",function(req,res){
     const numericDate=req.params.postDate;
-    if (numericDate==="today"){
-      res.render("write",{date:todayDate, day:todayDay, post:""});
-    }
+
       Post.findOne({date:numericDate},function(err,foundList){
         if (!err){
           if (!foundList){
-            console.log("did not find list");
+            console.log("not found list");
           }else{
             const weekday=date.findDateString(numericDate).weekday;
             const dateString=date.findDateString(numericDate).date;
