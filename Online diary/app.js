@@ -61,6 +61,14 @@ app.get("/manage", function(req,res){
   res.render("manage");
 });
 
+app.get("/about", function(req,res){
+  res.render("about");
+});
+
+app.get("/contact", function(req,res){
+  res.render("contact");
+});
+
 app.post("/mamage", function(req,res){
   const postDate=req.body.date;
   res.redirect("/read/"+postDate);
