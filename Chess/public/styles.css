@@ -1,0 +1,109 @@
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+
+.square {
+  border-color: #999;
+  border-width: 1px;
+  float: left;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  width: 34px;
+
+}
+
+.white{
+  background-color: white;
+}
+
+.green{
+    background-color: green;
+  }
+
+.lightGreen{
+  background-color:#e6ffcc; 
+}
+
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+
+
+
+.WK{
+    background-image: url("assets/white_king.png");
+}
+
+.WQ{
+    background-image: url("assets/white_queen.png");
+}
+
+.WR{
+    background-image: url("assets/white_rook.png");
+}
+
+.WB{
+    background-image: url("assets/white_bishop.png");
+}
+
+.WN{
+    background-image: url("assets/white_knight.png");
+}
+
+.WP{
+    background-image: url("assets/white_pawn.png");
+}
+
+
+.BK{
+    background-image: url("assets/black_king.png");
+}
+
+.BQ{
+    background-image: url("assets/black_queen.png");
+}
+
+.BR{
+    background-image: url("assets/black_rook.png");
+}
+
+.BB{
+    background-image: url("assets/black_bishop.png");
+}
+
+.BN{
+    background-image: url("assets/black_knight.png");
+}
+
+.BP{
+    background-image: url("assets/black_pawn.png");
+}
