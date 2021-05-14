@@ -5,7 +5,7 @@ import {arraysIncludeArray} from "./GeneralAlgorithms";
 import {checkEqualArray} from "./GeneralAlgorithms";
 import {flippingArrays}from "./GeneralAlgorithms";
 
-function Board (props) {
+function BoardWhiteSide (props) {
   const cellsColourIndex=[
   [0,1,0,1,0,1,0,1],
   [1,0,1,0,1,0,1,0],
@@ -16,7 +16,7 @@ function Board (props) {
   [0,1,0,1,0,1,0,1],
   [1,0,1,0,1,0,1,0],
 ];
-let boardForDisplay=props.isWhiteTurn?cellsColourIndex:flippingArrays(cellsColourIndex);
+let boardForDisplay=cellsColourIndex;
 
   function renderRows(row,rowNum){
     let cellColour;
@@ -53,7 +53,7 @@ let boardForDisplay=props.isWhiteTurn?cellsColourIndex:flippingArrays(cellsColou
     return (
       <div>
       {boardForDisplay.map((row,rowIndex)=>{
-        let rowNum=props.isWhiteTurn?boardForDisplay.length-1-rowIndex:rowIndex
+        let rowNum=boardForDisplay.length-1-rowIndex
         return (
           renderRows(row,rowNum)
         )
@@ -64,4 +64,4 @@ let boardForDisplay=props.isWhiteTurn?cellsColourIndex:flippingArrays(cellsColou
 }
 
 
-export default Board;
+export default BoardWhiteSide;

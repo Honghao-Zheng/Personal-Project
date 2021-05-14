@@ -9,6 +9,7 @@ function checkEqualArray(array1,array2){
     }
     return (true);
 }
+
 }
 
   function arraysIncludeArray(arrays,oneArray){
@@ -21,5 +22,17 @@ function checkEqualArray(array1,array2){
     return (false);
   }
 
+  function flippingArrays(arrays){
+    let newArrays=[];
+    let rowIndex;
+    for (rowIndex=arrays.length-1;rowIndex>=0;rowIndex--){
+      newArrays.push(arrays[rowIndex]);
+    }
+    return newArrays;
+  }
 
+
+
+export {flippingArrays};
 export {arraysIncludeArray};
+export {checkEqualArray};

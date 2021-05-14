@@ -1,19 +1,6 @@
-body {
-  font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 20px;
-}
 
 
 
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
-}
-
-.status {
-  margin-bottom: 10px;
-}
 
 .square {
   border-color: #999;
@@ -35,26 +22,29 @@ body {
     background-color: green;
   }
 
+.yellow{
+  background-color: yellow;
+}
+
 .lightGreen{
-  background-color:#e6ffcc; 
+  background-color:#e6ffcc;
 }
 
 
-.square:focus {
-  outline: none;
+.red{
+  background-color:red;
 }
 
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
 
 .game {
   display: flex;
   flex-direction: row;
 }
 
-.game-info {
-  margin-left: 20px;
+.row{
+  display:inline-block;
+position:relative;
+margin-right: 100px
 }
 
 

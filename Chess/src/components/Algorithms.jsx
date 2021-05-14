@@ -1,5 +1,16 @@
 //jshint esversion:6
 import {arraysIncludeArray} from "./GeneralAlgorithms";
+import {checkEqualArray} from "./GeneralAlgorithms";
+
+
+let castlingIndicators={
+  whiteKingSide:true,
+  whiteQueenSide:true,
+  blackKingSide:true,
+  blackQueenSide:true
+};
+
+let whoWins=null;
 
 function ruleOfKnight(pieceCoord,board){
   let [rowCoord,colCoord]=pieceCoord;
@@ -313,12 +324,6 @@ function movesOfPawn(pieceCoord,board){
     return collectionOfMoves;
   }
 
-let castlingIndicator={
-  whiteQueenSide:true,
-  whiteKingSide:true,
-  blackQueenSide:true,
-  blackKingSide:true
-};
 
 function kingSideCastlingMoves(kingCoord,cellsUnderAttacks,board){
   let [rowCoord,colCoord]=kingCoord;
@@ -353,30 +358,54 @@ function castlingMoves(kingCoord,kingColour,cellsUnderAttacks,board){
   let legalMove=[];
   let move;
   if (kingColour=="W"){
-    if (castlingIndicator.whiteKingSide){
+    if (castlingIndicators.whiteKingSide){
       move=kingSideCastlingMoves(kingCoord,cellsUnderAttacks,board);
       if (move){
       legalMove.push(move);
     }}
-    if (castlingIndicator.whiteQueenSide){
+    if (castlingIndicators.whiteQueenSide){
       move=queenSideCastlingMoves(kingCoord,cellsUnderAttacks,board);
       if (move){
       legalMove.push(move);
     }}
   }
   if (kingColour=="B"){
-    if (castlingIndicator.blackKingSide){
+    if (castlingIndicators.blackKingSide){
       move=kingSideCastlingMoves(kingCoord,cellsUnderAttacks,board);
       if (move){
       legalMove.push(move);
     }}
-    if (castlingIndicator.blackQueenSide){
+    if (castlingIndicators.blackQueenSide){
       move=queenSideCastlingMoves(kingCoord,cellsUnderAttacks,board);
       if (move){
       legalMove.push(move);
     }}
   }
   return legalMove;
+}
+
+
+function changeCastlingIndicators(piecesArrangement){
+  if (piecesArrangement[0][4] !=="WK"){
+    castlingIndicators.whiteKingSide=false;
+    castlingIndicators.whiteQueenSide=false;
+  }
+  if (piecesArrangement[0][7] !=="WR"){
+    castlingIndicators.whiteKingSide=false;
+  }
+  if (piecesArrangement[0][0] !=="WR"){
+    castlingIndicators.whiteQueenSide=false;
+  }
+  if (piecesArrangement[7][4] !=="BK"){
+    castlingIndicators.blackKingSide=false;
+    castlingIndicators.blackQueenSide=false;
+  }
+  if (piecesArrangement[7][7] !=="BR"){
+    castlingIndicators.blackKingSide=false;
+  }
+  if (piecesArrangement[7][0] !=="BR"){
+    castlingIndicators.blackQueenSide=false;
+  }
 }
 
 function movesOfKing(kingCoord,board){
@@ -427,21 +456,157 @@ function selectedPieceMoves(pieceCoord,board){
   return (legalMoves);
 }
 
-// def selected_chess_moves(i,j,Board):
-//     chess_pieces=occupying_chess(i,j,Board)
-//     if chess_pieces == ("N"):
-//         all_Moves=list(moves_of_Knight([i,j],Board))
-//     if chess_pieces == ("R"):
-//         all_Moves=list(moves_of_Rook([i,j],Board))
-//     if chess_pieces == ("B"):
-//         all_Moves=list(moves_of_Bishop([i,j],Board))
-//     if chess_pieces == ("Q"):
-//         all_Moves=list(moves_of_Queen([i,j],Board))
-//     if chess_pieces == ("P"):
-//         all_Moves=list(moves_of_Pawn([i,j],Board))
-//     if chess_pieces == ("K"):
-//         all_Moves=list(moves_of_King([i,j],Board))
-//     return(all_Moves)
+function allPossibleMoves(selectedColour,board){
+  let allMoves=[];
+  let rowCoord;
+  let colCoord;
+  for (rowCoord=0;rowCoord<8;rowCoord++){
+  for (colCoord=0;colCoord<8;colCoord++){
+    if (occupyingColour(rowCoord,colCoord,board)==selectedColour){
+      let moves=selectedPieceMoves([rowCoord,colCoord],board);
+      if (moves.length !==0){
+        moves.forEach(
+          cellCoord => {
+          allMoves.push(cellCoord);
+        }
+        );
+      }
+    }
+  }
+}
+return allMoves;
+}
+
+function makeCastlingRookMove(pieceMoved,moveFrom,moveTo,board){
+  if (pieceMoved==="WK"){
+    let wKingInitPosi=[0,4];
+    let kingSideCastling=[0,6];
+    let queenSideCastling=[0,2];
+    if (checkEqualArray(moveFrom,wKingInitPosi)){
+      if (checkEqualArray(moveTo,kingSideCastling)){
+        board[0][5]="WR";
+        board[0][7]=" ";
+      }
+      if (checkEqualArray(moveTo,queenSideCastling)){
+        board[0][3]="WR";
+        board[0][0]=" ";
+      }
+    }
+  }
+  if (pieceMoved==="BK"){
+    let bKingInitPosi=[7,4];
+    let kingSideCastling=[7,6];
+    let queenSideCastling=[7,2];
+    if (checkEqualArray(moveFrom,bKingInitPosi)){
+      if (checkEqualArray(moveTo,kingSideCastling)){
+        board[7][5]="BR";
+        board[7][7]=" ";
+      }
+      if (checkEqualArray(moveTo,queenSideCastling)){
+        board[7][3]="BR";
+        board[7][0]=" ";
+      }
+    }
+  }
+}
+
+function pawnBecomeQueen(pieceMoved,moveTo,board){
+  if (pieceMoved==="WP"){
+    let [pawnRowCoord,pawnColCoord]=moveTo;
+    if (pawnRowCoord==7){
+      board[pawnRowCoord][pawnColCoord]="WQ";
+    }
+  } else if (pieceMoved==="BP") {
+    let [pawnRowCoord,pawnColCoord]=moveTo;
+    if (pawnRowCoord==0){
+      board[pawnRowCoord][pawnColCoord]="BQ";
+  }
+}
+}
+
+function makingMove(moveFrom,moveTo,pieceMoved,board){
+  board[moveFrom[0]][moveFrom[1]]=" ";
+  board[moveTo[0]][moveTo[1]]=pieceMoved;
+  makeCastlingRookMove(pieceMoved,moveFrom,moveTo,board);
+  pawnBecomeQueen(pieceMoved,moveTo,board);
+}
+
+function isChecked(friendlyColour,board){
+  let enemyColour=oppositeColour(friendlyColour);
+  let dangerZone=allPossibleMoves(enemyColour,board);
+  let checked=false;
+  dangerZone.forEach(cellUnderAttack=>{
+    if (board[cellUnderAttack[0]][cellUnderAttack[1]]==friendlyColour+"K"){
+      checked=true;
+    }
+  });
+  if (checked){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+function isCheckmated(enemyColour,board){
+    let checkmated=true;
+    let rowCoord;
+    let colCoord;
+    for (rowCoord=0;rowCoord<8;rowCoord++){
+    for (colCoord=0;colCoord<8;colCoord++){
+      if (occupyingColour(rowCoord,colCoord,board)==enemyColour){
+        let responsesToCheck=selectedPieceMoves([rowCoord,colCoord],board);
+        if (responsesToCheck.length !==0){
+          responsesToCheck.forEach(moveTo=>{
+            let testingBoard=board.map(row=>{
+                  return (row.slice());
+                });
+                let moveFrom=[rowCoord,colCoord];
+                let pieceMoved=testingBoard[rowCoord][colCoord];
+                makingMove(moveFrom,moveTo,pieceMoved,testingBoard);
+                if (!isChecked(enemyColour,testingBoard)){
+                  checkmated=false;
+                }
+          });
+        }
+      }
+      if (!checkmated){
+        break;
+      }
+      if (!checkmated){
+        break;
+      }
+    }
+}
+return checkmated;
+}
+
+function makeLegalMove(possibleMoves,moveFrom,moveTo,pieceMoved,board){
+  let isMoveMade=false;
+  let friendlyColour=pieceMoved[0];
+  let enemyColour=oppositeColour(friendlyColour);
+  if (arraysIncludeArray(possibleMoves,moveTo)){
+  makingMove(moveFrom,moveTo,pieceMoved,board);
+  isMoveMade=true;
+  if (isChecked(friendlyColour,board)){
+    makingMove(moveTo,moveFrom,pieceMoved,board);
+    isMoveMade=false;
+    alert("Illegal move, King under check");
+  }
+else if(isCheckmated(enemyColour,board)){
+    if (friendlyColour=="W"){
+      whoWins="White Wins";
+    } else {
+      whoWins="Black Wins";
+    }
+  }
+}
+if (isMoveMade){
+  changeCastlingIndicators(board);
+}
+return isMoveMade;
+}
+
 
 function oppositeColour(playerColour){
   if (playerColour==="W"){
@@ -465,8 +630,7 @@ function occupyingPiece(rowCoord,colCoord,board){
   return (pieceType);
 }
 
-
-
-
-export {allAttackingRanges};
+export {whoWins};
+export {changeCastlingIndicators};
+export {makeLegalMove};
 export {selectedPieceMoves};
