@@ -3,11 +3,9 @@ import React, { useState } from "react";
 import Board from "./Board";
 import BoardWhiteSide from "./BoardWhiteSide";
 import BoardBlackSide from "./BoardBlackSide";
-import {changeCastlingIndicators} from "./Algorithms";
-import {makeLegalMove} from "./Algorithms";
-import {selectedPieceMoves} from "./Algorithms";
+import {makeLegalMove,selectedPieceMoves,whoWins} from "./ChessAlgorithms";
 import {arraysIncludeArray} from "./GeneralAlgorithms";
-import {whoWins} from "./Algorithms";
+
 
 
 let piecesArrangement=[

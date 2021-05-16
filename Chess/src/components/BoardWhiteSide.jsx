@@ -1,9 +1,8 @@
 //jshint esversion:6
 import React from "react";
 import Square from "./Square";
-import {arraysIncludeArray} from "./GeneralAlgorithms";
-import {checkEqualArray} from "./GeneralAlgorithms";
-import {flippingArrays}from "./GeneralAlgorithms";
+import {arraysIncludeArray,flippingArrays,checkEqualArray} from "./GeneralAlgorithms";
+
 
 function BoardWhiteSide (props) {
   const cellsColourIndex=[

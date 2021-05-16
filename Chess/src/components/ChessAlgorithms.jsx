@@ -1,6 +1,6 @@
 //jshint esversion:6
-import {arraysIncludeArray} from "./GeneralAlgorithms";
-import {checkEqualArray} from "./GeneralAlgorithms";
+import {arraysIncludeArray,checkEqualArray} from "./GeneralAlgorithms";
+
 
 
 let castlingIndicators={
@@ -630,7 +630,4 @@ function occupyingPiece(rowCoord,colCoord,board){
   return (pieceType);
 }
 
-export {whoWins};
-export {changeCastlingIndicators};
-export {makeLegalMove};
-export {selectedPieceMoves};
+export {whoWins,makeLegalMove,selectedPieceMoves};

@@ -33,6 +33,4 @@ function checkEqualArray(array1,array2){
 
 
 
-export {flippingArrays};
-export {arraysIncludeArray};
-export {checkEqualArray};
+export {flippingArrays,arraysIncludeArray,checkEqualArray};
