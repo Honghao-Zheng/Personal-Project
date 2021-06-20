@@ -35,5 +35,10 @@ exports.findDateString=function(numericDate){
 };
 
 exports.numericDate=function(dateString){
-  return new Date(dateString).toISOString().slice(0,10);
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  today = yyyy + "-" + mm + "-" + dd;
+  return today;
 };
