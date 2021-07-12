@@ -65,7 +65,7 @@ app.get("/write",function(req,res){
 });
 
 app.get("/login",function(req,res){
-  res.render("login");
+  res.render("login",infoOfUserSignedIn(req));
 });
 
 app.get("/manage",function(req,res){
@@ -77,7 +77,7 @@ app.get("/manage",function(req,res){
 });
 
 app.get("/register",function(req,res){
-  res.render("register");
+  res.render("register",infoOfUserSignedIn(req));
 });
 
 app.get("/logout", function(req, res){
@@ -193,7 +193,7 @@ app.post("/register", function(req, res){
   User.register({username: req.body.username}, req.body.password, function(err, user){
     if (err) {
       console.log(err);
-      res.render("register");
+      res.render("register",infoOfUserSignedIn(req));
     } else {
       passport.authenticate("local")(req, res, function(){
         res.redirect("/");
