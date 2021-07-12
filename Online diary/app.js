@@ -24,7 +24,7 @@ mongoose.connect("mongodb://localhost:27017/diaryDB",{useNewUrlParser: true ,use
 app.use(bodyParser.urlencoded({extended:true}));
 
 
-let todayDate=date.numericDate();
+
 
 const postsSchema={
   date:String,
@@ -49,15 +49,18 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-
+function infoOfUserSignedIn(request){
+  return {username:request.isAuthenticated()?request.user.username:null, isLogin:request.isAuthenticated()};
+}
 
 const defaultPost="You have not written anything for the day.";
 
 app.get("/",function(req,res){
-  res.render("home");
+  res.render("home",infoOfUserSignedIn(req));
 });
 
 app.get("/write",function(req,res){
+  let todayDate=date.numericDate();
   res.redirect("/write/"+todayDate);
 });
 
@@ -69,7 +72,7 @@ app.get("/manage",function(req,res){
   if (!req.isAuthenticated){
     res.redirect("/login");
   } else {
-    res.render("manage");
+    res.render("manage",infoOfUserSignedIn(req));
   }
 });
 
@@ -77,13 +80,17 @@ app.get("/register",function(req,res){
   res.render("register");
 });
 
+app.get("/logout", function(req, res){
+  req.logout();
+  res.redirect("/");
+});
 
 app.get("/about", function(req,res){
-  res.render("about");
+  res.render("about",infoOfUserSignedIn(req));
 });
 
 app.get("/contact", function(req,res){
-  res.render("contact");
+  res.render("contact",infoOfUserSignedIn(req));
 });
 
 app.get("/read/:postDate",function(req,res){
@@ -107,7 +114,10 @@ app.get("/read/:postDate",function(req,res){
              allPosts.forEach(postOfTheDay=>{
                if (postOfTheDay.date===numericDate){
                  postExist=true;
-                 res.render("read",{stringDate:dateString, day:weekday, post:postOfTheDay.post,numericDate:numericDate});
+                 res.render("read",
+                 Object.assign(infoOfUserSignedIn(req),
+                 {stringDate:dateString, day:weekday, post:postOfTheDay.post,numericDate:numericDate}
+               ));
                }
              });
            }
@@ -118,7 +128,10 @@ app.get("/read/:postDate",function(req,res){
                   });
                   foundUser.secrets.push(newDiary);
                 foundUser.save();
-                res.render("read",{stringDate:dateString, day:weekday, post:newDiary.post,numericDate:numericDate});
+                res.render("read",Object.assign(
+                  infoOfUserSignedIn(req),
+                  {stringDate:dateString, day:weekday, post:newDiary.post,numericDate:numericDate}
+                ));
               }
 
          }
@@ -149,7 +162,10 @@ app.get("/write/:postDate",function(req,res){
          allPosts.forEach(postOfTheDay=>{
            if (postOfTheDay.date===numericDate){
              postExist=true;
-             res.render("write",{stringDate:dateString, day:weekday, post:postOfTheDay.post,numericDate:numericDate });
+             res.render("write",Object.assign(
+               infoOfUserSignedIn(req),
+               {stringDate:dateString, day:weekday, post:postOfTheDay.post,numericDate:numericDate }
+             ));
            }
          });
        }
@@ -160,7 +176,10 @@ app.get("/write/:postDate",function(req,res){
               });
               foundUser.secrets.push(newDiary);
             foundUser.save();
-            res.render("write",{stringDate:dateString, day:weekday, post:newDiary.post,numericDate:numericDate});
+            res.render("write",Object.assign(
+              infoOfUserSignedIn(req),
+              {stringDate:dateString, day:weekday, post:newDiary.post,numericDate:numericDate}
+            ));
           }
 
      }

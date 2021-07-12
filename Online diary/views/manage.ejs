@@ -1,4 +1,4 @@
-<%- include("partials/header") -%>
+<%- include("partials/header", {username:username, isLogin:isLogin}) -%>
 <div >
   <form action="/manage" method="post">
   <input type="date" name="numericDate">
