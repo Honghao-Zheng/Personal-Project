@@ -43,3 +43,20 @@ exports.numericDate=function(dateString){
 
   return today;
 };
+
+// let wordCounts=0;
+// let sliceFrom=0;
+// let sliceTo;
+// let p="Sound That's Engineered For You, For An Unsurpassed Calls & Music Experience. Shop Now. Our World Class Calls & Music Products Are The Perfect Sound Solution For All Your Needs. Free Standard Shipping. 1 Year Warranty. Free Technical Support. 30 Day Returns.";
+// for (let characterIndex=0; characterIndex <= p.length; characterIndex++){
+//   if (p[characterIndex]===" "){
+//     wordCounts+=1;
+//     if (wordCounts%20==0){
+//       sliceTo=characterIndex;
+//       console.log(sliceFrom,sliceTo+1);
+//       console.log(p.slice(sliceFrom,sliceTo+1));
+//       sliceFrom=sliceTo;
+//     }
+//   }}
+//
+// }
