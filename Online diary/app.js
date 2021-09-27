@@ -20,7 +20,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://localhost:27017/diaryDB",{useNewUrlParser: true ,useUnifiedTopology: true });
+mongoose.connect("mongodb+srv://Jason:<password>@cluster0.hi6fi.mongodb.net/diaryDB?retryWrites=true&w=majority",{useNewUrlParser: true ,useUnifiedTopology: true });
 app.use(bodyParser.urlencoded({extended:true}));
 
 
