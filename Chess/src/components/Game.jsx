@@ -6,8 +6,7 @@ import BoardBlackSide from "./BoardBlackSide";
 import {makeLegalMove,selectedPieceMoves,whoWins} from "./ChessAlgorithms";
 import {arraysIncludeArray} from "./GeneralAlgorithms";
 
-
-
+const year=new Date().getFullYear();
 let piecesArrangement=[
                       ["WR","WN","WB","WQ","WK","WB","WN","WR"],
                       ["WP","WP","WP","WP","WP","WP","WP","WP"],
@@ -84,9 +83,20 @@ function Game (){
 
     return (
       <div >
-      <div className="game row">
-      <h3>{gameState.isWhiteTurn?"White's Turn":"Black's Turn"} </h3>
-          <Board
+        <div className="game row">
+        <h3>{gameState.isWhiteTurn?"White's Turn":"Black's Turn"} </h3>
+            <Board
+            piecesArrangement={piecesArrangement}
+            onClick={([rowNum,colNum])=>handleClick([rowNum,colNum])}
+            validMoves={pieceSelected.possibleMoves}
+            clickedCell={[pieceSelected.coord.row,pieceSelected.coord.col]}
+            isWhiteTurn={gameState.isWhiteTurn}
+            moveMade={pieceMoved}
+            />
+        </div>
+        <div className="game row">
+        <h3> Display for white side </h3>
+        <BoardWhiteSide
           piecesArrangement={piecesArrangement}
           onClick={([rowNum,colNum])=>handleClick([rowNum,colNum])}
           validMoves={pieceSelected.possibleMoves}
@@ -94,32 +104,24 @@ function Game (){
           isWhiteTurn={gameState.isWhiteTurn}
           moveMade={pieceMoved}
           />
-          </div>
-              <div className="game row">
-              <h3> Display for white side </h3>
-                  <BoardWhiteSide
-                  piecesArrangement={piecesArrangement}
-                  onClick={([rowNum,colNum])=>handleClick([rowNum,colNum])}
-                  validMoves={pieceSelected.possibleMoves}
-                  clickedCell={[pieceSelected.coord.row,pieceSelected.coord.col]}
-                  isWhiteTurn={gameState.isWhiteTurn}
-                  moveMade={pieceMoved}
-                  />
-                  </div>
-                  <div className="game row">
-                  <h3> Display for black side </h3>
-                      <BoardBlackSide
-                      piecesArrangement={piecesArrangement}
-                      onClick={([rowNum,colNum])=>handleClick([rowNum,colNum])}
-                      validMoves={pieceSelected.possibleMoves}
-                      clickedCell={[pieceSelected.coord.row,pieceSelected.coord.col]}
-                      isWhiteTurn={gameState.isWhiteTurn}
-                      moveMade={pieceMoved}
-                      />
-                      </div>
-          <div>
-             <h1>Game result: {whoWins} </h1>
-          </div>
+        </div>
+        <div className="game row">
+        <h3> Display for black side </h3>
+            <BoardBlackSide
+            piecesArrangement={piecesArrangement}
+            onClick={([rowNum,colNum])=>handleClick([rowNum,colNum])}
+            validMoves={pieceSelected.possibleMoves}
+            clickedCell={[pieceSelected.coord.row,pieceSelected.coord.col]}
+            isWhiteTurn={gameState.isWhiteTurn}
+            moveMade={pieceMoved}
+            />
+        </div>
+        <div>
+           <h1>Game result: {whoWins} </h1>
+        </div>
+        <div class="footer">
+        <p>© Copyright {year} Honghao Zheng</p>
+        </div>
       </div>
 
     );
