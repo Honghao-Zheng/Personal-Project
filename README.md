@@ -13,3 +13,11 @@ To get started, first clone this repository:
 git clone https://github.com/Honghao-Zheng/online-diary.git
 cd online-diary
 ```
+
+Then install the dependencies and start the development server:
+```
+npm install
+node app.js
+```
+
+This will start the development server at http://localhost:3000.
