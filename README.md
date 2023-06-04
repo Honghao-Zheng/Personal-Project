@@ -18,6 +18,9 @@ Then install the dependencies and start the development server:
 ```
 npm install
 node app.js
+# or
+yarn
+yarn dev
 ```
 
 This will start the development server at http://localhost:3000.
