@@ -3,6 +3,7 @@ const express = require('express');
 const ejs = require("ejs");
 const bodyParser=require("body-parser");
 const date=require(__dirname+"/date.js");
+
 const mongoose=require("mongoose");
 const session = require('express-session');
 const passport = require("passport");
@@ -23,7 +24,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser: true,useUnifiedTopology: true});
 
 // mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser: true ,useUnifiedTopology: true });
 app.use(bodyParser.urlencoded({extended:true}));
@@ -31,16 +32,16 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 
 
-const postsSchema={
+const diariesSchema={
   date:String,
-  post:String
+  diary:String
 };
 const userSchema = new mongoose.Schema ({
-  secrets:[postsSchema]
+  secrets:[diariesSchema]
 });
 
 userSchema.plugin(passportLocalMongoose);
-const Post=new mongoose.model("Post",postsSchema);
+const Diary=new mongoose.model("Diary",diariesSchema);
 const User = new mongoose.model("User", userSchema);
 passport.use(User.createStrategy());
 
@@ -55,10 +56,13 @@ passport.deserializeUser(function(id, done) {
 });
 
 function infoOfUserSignedIn(request){
-  return {username:request.isAuthenticated()?request.user.username:null, isLogin:request.isAuthenticated()};
+  return {
+    username:request.isAuthenticated()?request.user.username:null, 
+    isLogin:request.isAuthenticated()
+  };
 }
 
-const defaultPost="You have not written anything for the day.";
+const defaultDiary="Write something for the day...";
 
 app.get("/",function(req,res){
   res.render("home",infoOfUserSignedIn(req));
@@ -98,11 +102,11 @@ app.get("/contact", function(req,res){
   res.render("contact",infoOfUserSignedIn(req));
 });
 
-app.get("/read/:postDate",function(req,res){
-  const numericDate=req.params.postDate;
+app.get("/read/:diaryDate",function(req,res){
+  const numericDate=req.params.diaryDate;
   const weekday=date.findDateString(numericDate).weekday;
   const dateString=date.findDateString(numericDate).date;
-  postExist=false;
+  diaryExist=false;
   if (!req.isAuthenticated()){
     res.redirect("/login");
   } else {
@@ -114,41 +118,40 @@ app.get("/read/:postDate",function(req,res){
          if (!foundUser){
            console.log("cannot find user");
          }else{
-           let allPosts=foundUser.secrets;
-           if (allPosts.length !==0){
-             allPosts.forEach(postOfTheDay=>{
-               if (postOfTheDay.date===numericDate){
-                 postExist=true;
+           let allDiaries=foundUser.secrets;
+           if (allDiaries.length !==0){
+            allDiaries.forEach(diaryOfTheDay=>{
+               if (diaryOfTheDay.date===numericDate){
+                diaryExist=true;
                  res.render("read",
                  Object.assign(infoOfUserSignedIn(req),
-                 {stringDate:dateString, day:weekday, post:postOfTheDay.post,numericDate:numericDate}
+                 {stringDate:dateString, day:weekday, diary:diaryOfTheDay.diary,numericDate:numericDate}
                ));
                }
              });
            }
-           if(!postExist){
-                  const newDiary=new Post({
+           if(!diaryExist){
+                  const newDiary=new Diary({
                     date:numericDate,
-                    post:defaultPost
+                    diary:defaultDiary
                   });
                   foundUser.secrets.push(newDiary);
                 foundUser.save();
                 res.render("read",Object.assign(
                   infoOfUserSignedIn(req),
-                  {stringDate:dateString, day:weekday, post:newDiary.post,numericDate:numericDate}
+                  {stringDate:dateString, day:weekday, diary:newDiary.diary,numericDate:numericDate}
                 ));
               }
-
          }
        }
      });
   }
-
 });
 
-app.get("/write/:postDate",function(req,res){
- const numericDate=req.params.postDate;
- let postExist=false;
+
+app.get("/write/:diaryDate",function(req,res){
+ const numericDate=req.params.diaryDate;
+ let diaryExist=false;
  const weekday=date.findDateString(numericDate).weekday;
  const dateString=date.findDateString(numericDate).date;
  if (!req.isAuthenticated()){
@@ -162,28 +165,28 @@ app.get("/write/:postDate",function(req,res){
      if (!foundUser){
        console.log("cannot find user");
      }else{
-       let allPosts=foundUser.secrets;
-       if (allPosts.length !==0){
-         allPosts.forEach(postOfTheDay=>{
-           if (postOfTheDay.date===numericDate){
-             postExist=true;
+       let allDiaries=foundUser.secrets;
+       if (allDiaries.length !==0){
+         allDiaries.forEach(diaryOfTheDay=>{
+           if (diaryOfTheDay.date===numericDate){
+            diaryExist=true;
              res.render("write",Object.assign(
                infoOfUserSignedIn(req),
-               {stringDate:dateString, day:weekday, post:postOfTheDay.post,numericDate:numericDate }
+               {stringDate:dateString, day:weekday, diary:diaryOfTheDay.diary,numericDate:numericDate }
              ));
            }
          });
        }
-       if(!postExist){
-              const newDiary=new Post({
+       if(!diaryExist){
+              const newDiary=new Diary({
                 date:numericDate,
-                post:""
+                diary:""
               });
               foundUser.secrets.push(newDiary);
             foundUser.save();
             res.render("write",Object.assign(
               infoOfUserSignedIn(req),
-              {stringDate:dateString, day:weekday, post:newDiary.post,numericDate:numericDate}
+              {stringDate:dateString, day:weekday, diary:newDiary.diary,numericDate:numericDate}
             ));
           }
 
@@ -194,7 +197,7 @@ app.get("/write/:postDate",function(req,res){
 });
 
 
-app.post("/register", function(req, res){
+app.diary("/register", function(req, res){
   User.register({username: req.body.username}, req.body.password, function(err, user){
     if (err) {
       console.log(err);
