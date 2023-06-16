@@ -3,13 +3,12 @@ const express = require('express');
 const ejs = require("ejs");
 const bodyParser=require("body-parser");
 const date=require(__dirname+"/date.js");
-
 const mongoose=require("mongoose");
 const session = require('express-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
-
 const app=express();
+const defaultDiary="Write something for the day...";
 // set the view engine to ejs
 app.set("view engine","ejs");
 //To use multiple static assets directories
@@ -24,9 +23,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser: true,useUnifiedTopology: true});
+mongoose.connect("mongodb://localhost:27017/diaryDB",{useNewUrlParser: true,useUnifiedTopology: true});
 
-// mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser: true ,useUnifiedTopology: true });
 app.use(bodyParser.urlencoded({extended:true}));
 
 
@@ -62,10 +60,11 @@ function infoOfUserSignedIn(request){
   };
 }
 
-const defaultDiary="Write something for the day...";
+
 
 app.get("/",function(req,res){
-  res.render("home",infoOfUserSignedIn(req));
+  console.log(req)
+  return res.json(infoOfUserSignedIn(req));
 });
 
 app.get("/write",function(req,res){
@@ -197,7 +196,7 @@ app.get("/write/:diaryDate",function(req,res){
 });
 
 
-app.diary("/register", function(req, res){
+app.post("/register", function(req, res){
   User.register({username: req.body.username}, req.body.password, function(err, user){
     if (err) {
       console.log(err);
@@ -272,6 +271,6 @@ app.post("/read",function(req,res){
 
 
 
-app.listen(3000,function(){
-  console.log("start server port 3000");
+app.listen(8080,function(){
+  console.log("start server port 8080");
 });
