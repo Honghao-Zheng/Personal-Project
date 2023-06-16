@@ -7,7 +7,9 @@ import { Link } from "react-router-dom";
 function Authentication(props){
     if (props.isLogin){
         return (
+            
             <div>
+            
                 <li >Hi {props.username}</li>
                 <li ><Link>Logout</Link></li>
             </div>
@@ -26,6 +28,7 @@ function Authentication(props){
 
 function Header(props){
     return (
+        
         <div>
         
     <nav class="navbar navbar-default">
