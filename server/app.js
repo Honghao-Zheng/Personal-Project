@@ -8,12 +8,13 @@ const session = require('express-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const app=express();
+const cors =require("cors");
 const defaultDiary="Write something for the day...";
 // set the view engine to ejs
 app.set("view engine","ejs");
 //To use multiple static assets directories
 app.use(express.static("public"));
-
+app.use(cors());
 app.use(session({
   secret: "secret",
   resave: false,
@@ -63,7 +64,7 @@ function infoOfUserSignedIn(request){
 
 
 app.get("/",function(req,res){
-  console.log(req)
+  // console.log(req)
   return res.json(infoOfUserSignedIn(req));
 });
 
@@ -203,6 +204,7 @@ app.post("/register", function(req, res){
       res.render("register",infoOfUserSignedIn(req));
     } else {
       passport.authenticate("local")(req, res, function(){
+        // res.json(infoOfUserSignedIn(req))
         res.redirect("/");
       });
     }
@@ -218,10 +220,11 @@ app.post("/login", function(req, res){
     req.login(user,function(err){
       if (err){
         console.log(err);
-        res.redirect("/login");
+        res.json(err);
       }else{
         passport.authenticate("local")(req,res,function(){
-          res.redirect("/");
+          console.log(infoOfUserSignedIn(req));
+          return res.json(infoOfUserSignedIn(req))
         });
       }
     });

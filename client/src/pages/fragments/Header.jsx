@@ -1,10 +1,12 @@
 import React from "react";
+
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-
 function Authentication(props){
+  console.log("isLogin: "+props.isLogin);
+  
     if (props.isLogin){
         return (
             
@@ -17,16 +19,32 @@ function Authentication(props){
     } else{
         return (
         <div>
-            <li ><Link>Login</Link></li>
+            <li ><Link to="/login">Login</Link></li>
             <li ><Link>Register</Link></li>
         </div>
         )
     }
-
 }
 
-
 function Header(props){
+    // const [authentication, setAuthentication] = useState({
+    //     userName:null,
+    //     isLogin:false
+    // });
+    console.log("header called")
+  
+    // useEffect(() => {
+    //   console.log("header called2")
+    //   const fetchLoginInfo = async () => {
+    //     try {
+    //       const res = await axios.get("http://localhost:8080");
+    //       setAuthentication(res.data);
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    //   };
+    //   fetchLoginInfo();
+    // }, []);
     return (
         
         <div>
