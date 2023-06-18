@@ -1,13 +1,13 @@
 import React from "react";
-
+import Axios from "axios";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 function Authentication(props){
-  console.log("isLogin: "+props.isLogin);
   
-    if (props.isLogin){
+  
+    if (props.username){
         return (
             
             <div>
@@ -26,25 +26,25 @@ function Authentication(props){
     }
 }
 
-function Header(props){
-    // const [authentication, setAuthentication] = useState({
-    //     userName:null,
-    //     isLogin:false
-    // });
-    console.log("header called")
+function Header(){
+  const [data, setData] = useState(null);
+  const getUser = () => {
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: "http://localhost:8080/user",
+    }).then((res) => {
+      setData(res.data);
+      console.log(res);
+    });
+  };
+    useEffect(() => {
+      getUser();
+    }, []);
+
+
   
-    // useEffect(() => {
-    //   console.log("header called2")
-    //   const fetchLoginInfo = async () => {
-    //     try {
-    //       const res = await axios.get("http://localhost:8080");
-    //       setAuthentication(res.data);
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   };
-    //   fetchLoginInfo();
-    // }, []);
+
     return (
         
         <div>
@@ -55,10 +55,9 @@ function Header(props){
           <p class="navbar-brand">DIARY</p>
         </div>
         <ul class="nav navbar-nav">
-<Authentication
-isLogin={props.isLogin}
-username={props.username}
-/>
+          <Authentication
+          username={data?data.username:null}
+          />
 
         </ul>
           <ul class="nav navbar-nav navbar-right">
