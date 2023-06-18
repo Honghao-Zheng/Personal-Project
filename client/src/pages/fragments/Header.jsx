@@ -5,7 +5,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 function Authentication(props){
-  
+  const logout = () => {
+    Axios({
+      method: "POST",
+      withCredentials: true,
+      url: "http://localhost:8080/logout",
+    }).then((res) => {
+      console.log(res);
+    });
+  };
   
     if (props.username){
         return (
@@ -13,7 +21,7 @@ function Authentication(props){
             <div>
             
                 <li >Hi {props.username}</li>
-                <li ><Link to="/logout">Logout</Link></li>
+                <li onClick={logout}><Link to="/">Logout</Link></li>
             </div>
         )
     } else{
@@ -27,6 +35,7 @@ function Authentication(props){
 }
 
 function Header(){
+  
   const [data, setData] = useState(null);
   const getUser = () => {
     Axios({

@@ -93,7 +93,12 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-
+app.post('/logout', function(req, res, next){
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.send("Logout successfully");
+  });
+});
 
 app.post("/register", (req, res) => {
   User.register({username: req.body.username}, req.body.password, function(err, user){
@@ -111,7 +116,6 @@ app.post("/register", (req, res) => {
 
 
 app.get("/user", (req, res) => {
-  console.log(req);
   res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
 });
 //----------------------------------------- END OF ROUTES---------------------------------------------------
@@ -186,10 +190,7 @@ function infoOfUserSignedIn(request){
 //   res.render("register",infoOfUserSignedIn(req));
 // });
 
-// app.get("/logout", function(req, res){
-//   req.logout();
-//   res.redirect("/");
-// });
+
 
 // app.get("/about", function(req,res){
 //   res.render("about",infoOfUserSignedIn(req));

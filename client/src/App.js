@@ -5,6 +5,8 @@ import Header from "./pages/fragments/Header"
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
+import WriteDiary from "./pages/WriteDiary";
+import ManageDiary from "./pages/ManageDiary";
 function App() {
 //   const [authentication, setAuthentication] = useState({
 //     userName:null,
@@ -34,6 +36,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/write" element={<WriteDiary />} />
+          <Route path="/manage" element={<ManageDiary />} />
    
         </Routes>
       </BrowserRouter>

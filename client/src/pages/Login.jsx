@@ -21,25 +21,11 @@ function Login() {
       url: "http://localhost:8080/login",
     }).then((res) => console.log(res))
   };
-  const getUser = () => {
-    Axios({
-      method: "GET",
-      withCredentials: true,
-      url: "http://localhost:8080/user",
-    }).then((res) => {
-      setData(res.data);
-      console.log(res);
-    });
-  };
-    useEffect(() => {
-      getUser();
-    }, []);
+
   
   return (
     <div className="App">
-       <Header
-      username={data?data.username:null}
-      />
+       <Header />
       <div>
         <h1>Login</h1>
         <input
@@ -53,11 +39,6 @@ function Login() {
         <button onClick={login}>Submit</button>
       </div>
 
-      <div>
-        <h1>Get User</h1>
-        <button onClick={getUser}>Submit</button>
-        {data ? <h1>Welcome Back {data.username}</h1> : null}
-      </div>
 
       {/* {data ? <Navigate to="/login" replace={true}/>:null} */}
     </div>
