@@ -22,12 +22,24 @@ const Login = () => {
   const handleChange = (e) => {
     
     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    let test=async (e) => {
+
+      try {
+        let res=await axios.get("http://localhost:8080");
+        console.log("onchange get root:")
+        console.log(res.data);
+  
+  
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    test();
   };
-  const handleClick = async (e) => {
+  const login = async (e) => {
 
     e.preventDefault();
     try {
-
       authen=await axios.post("http://localhost:8080/login", querystring.stringify(user),
       
       {
@@ -38,6 +50,7 @@ const Login = () => {
     );
 
     setAuthen(authen.data);
+    console.log(authen);
 
     } catch (err) {
       console.log(err);
@@ -71,9 +84,9 @@ const Login = () => {
               onChange={handleChange}
               />
             </div>
-            <button onClick={handleClick} type="submit" class="btn btn-dark">Login</button>
+            <button onClick={login} type="submit" class="btn btn-dark">Login</button>
           </form>
-          {user && (
+          {authentication.isLogin && (
           <Navigate to="/login" replace={true} />
         )}
     </div>

@@ -8,18 +8,26 @@ const session = require('express-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const app=express();
+const cookieParser=require("cookie-parser");
 const cors =require("cors");
 const defaultDiary="Write something for the day...";
 // set the view engine to ejs
 app.set("view engine","ejs");
 //To use multiple static assets directories
 app.use(express.static("public"));
-app.use(cors());
+
+app.use(cors(
+  {
+origin:"http://localhost:3000",
+credentials:true
+}
+));
 app.use(session({
   secret: "secret",
-  resave: false,
-  saveUninitialized: false
+  resave: true,
+  saveUninitialized: true
 }));
+app.use(cookieParser("secret"));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -40,7 +48,7 @@ const userSchema = new mongoose.Schema ({
 });
 
 userSchema.plugin(passportLocalMongoose);
-const Diary=new mongoose.model("Diary",diariesSchema);
+const Diary=new mongoose.model("Diary", diariesSchema);
 const User = new mongoose.model("User", userSchema);
 passport.use(User.createStrategy());
 
@@ -64,7 +72,8 @@ function infoOfUserSignedIn(request){
 
 
 app.get("/",function(req,res){
-  // console.log(req)
+  console.log("root: ")
+  console.log(infoOfUserSignedIn(req));
   return res.json(infoOfUserSignedIn(req));
 });
 
@@ -213,16 +222,20 @@ app.post("/register", function(req, res){
 
 
 app.post("/login", function(req, res){
+  console.log(req.body);
     const user=new User({
       username:req.body.username,
       password:req.body.password
     });
+    console.log("before: ")
+    console.log(infoOfUserSignedIn(req))
     req.login(user,function(err){
       if (err){
         console.log(err);
         res.json(err);
       }else{
         passport.authenticate("local")(req,res,function(){
+          console.log("after: ")
           console.log(infoOfUserSignedIn(req));
           return res.json(infoOfUserSignedIn(req))
         });

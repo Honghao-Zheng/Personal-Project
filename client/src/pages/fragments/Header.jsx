@@ -13,7 +13,7 @@ function Authentication(props){
             <div>
             
                 <li >Hi {props.username}</li>
-                <li ><Link>Logout</Link></li>
+                <li ><Link to="/logout">Logout</Link></li>
             </div>
         )
     } else{
