@@ -11,8 +11,6 @@ function Register() {
   });
 
   const handleChange = (e) => {
-    console.log("e.target.name: "+e.target.name)
-    console.log("e.target.value: "+e.target.value)
     setRegisterUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -41,7 +39,7 @@ function Register() {
         <input placeholder="password" name="password" onChange={handleChange} />
         <button onClick={register}>Submit</button>
       </div>
-      {data ? <Navigate to="/" replace={true} /> : null}
+      {data==="Authenticated" ? <Navigate to="/" replace={true} /> : null}
     </div>
   );
 }

@@ -5,20 +5,30 @@ import { useEffect } from "react";
 import { Link, useLocation, useNavigate, Navigate } from "react-router-dom";
 
 function Login() {
+  const [data, setData] = useState(null);
+  const [loginUser, setLoginUser] = useState({
+    username: "",
+    password: "",
+  });
+  const handleChange = (e) => {
+    setLoginUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-  const [loginUsername, setLoginUsername] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
   const login = () => {
    
     Axios({
       method: "POST",
       data: {
-        username: loginUsername,
-        password: loginPassword,
+        username: loginUser.username,
+        password: loginUser.password,
       },
       withCredentials: true,
       url: "http://localhost:8080/login",
-    }).then((res) => console.log(res))
+    }).then((res) => {
+      console.log(res);
+      setData(res.data)
+    }
+    )
   };
 
   
@@ -29,17 +39,17 @@ function Login() {
         <h1>Login</h1>
         <input
           placeholder="username"
-          onChange={(e) => setLoginUsername(e.target.value)}
+          name="username"
+          onChange={handleChange}
         />
         <input
           placeholder="password"
-          onChange={(e) => setLoginPassword(e.target.value)}
+          name="password"
+          onChange={handleChange}
         />
         <button onClick={login}>Submit</button>
       </div>
-
-
-      {/* {data ? <Navigate to="/login" replace={true}/>:null} */}
+      {data==="Authenticated" ? <Navigate to="/" replace={true}/>:null}
     </div>
 
 

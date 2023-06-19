@@ -8,8 +8,6 @@ import querystring from "querystring";
 
 const Home = () => {
 
-    
-    
     return (
       <div>
       

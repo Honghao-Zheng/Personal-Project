@@ -67,9 +67,9 @@ function Header(){
 
         </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li ><Link>HOME</Link></li>
-            <li ><Link>ABOUT</Link></li>
-            <li ><Link>CONTACT</Link></li>
+            <li ><Link to={"/"}>HOME</Link></li>
+            <li ><Link to={"/about"}>ABOUT</Link></li>
+            <li ><Link to={"/contact"}>CONTACT</Link></li>
           </ul>
       </div>
     </nav>
