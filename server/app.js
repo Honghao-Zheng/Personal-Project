@@ -40,8 +40,8 @@ app.use(
 app.use(
   session({
     secret: "secretcode",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
   })
 );
 app.use(cookieParser("secretcode"));
@@ -94,6 +94,7 @@ app.post("/login", (req, res, next) => {
 
 app.post('/logout', function(req, res, next){
   console.log(req.isAuthenticated())
+  req.logout();
   req.logout(function(err) {
     console.log(req.isAuthenticated());
     if (err) { return next(err); }
@@ -105,7 +106,7 @@ app.post("/register", (req, res) => {
   User.register({username: req.body.username}, req.body.password, function(err, user){
     if (err) {
       console.log(err);
-      res.send("Username exist")
+      res.send("User already exist or incorrect password")
     } else {
       passport.authenticate("local")(req, res, function(){
         // res.json(infoOfUserSignedIn(req))
@@ -121,24 +122,6 @@ app.get("/user", (req, res) => {
 });
 //----------------------------------------- END OF ROUTES---------------------------------------------------
 //Start Server
-
-
-app.get("/write",function(req,res){
-  let todayDate=date.numericDate();
-  res.json(todayDate);
-});
-
-
-
-// app.get("/manage",function(req,res){
-//   if (!req.isAuthenticated){
-//     res.redirect("/login");
-//   } else {
-//     res.render("manage",infoOfUserSignedIn(req));
-//   }
-// });
-
-
 
 
 
@@ -188,7 +171,7 @@ app.get("/find/:diaryDate",function(req,res){
 }
 )
 
-app.post("/write",function(req,res){
+app.put("/write",function(req,res){
   console.log(req.body);
   const numericDate=req.body.numericDate.slice(0,10);
   const content=req.body.diary;
@@ -212,6 +195,21 @@ app.post("/write",function(req,res){
     }
   });
 });
+
+
+// app.get("/manage",function(req,res){
+//   if (!req.isAuthenticated){
+//     res.redirect("/login");
+//   } else {
+//     res.render("manage",infoOfUserSignedIn(req));
+//   }
+// });
+
+
+
+
+
+
 
 
 

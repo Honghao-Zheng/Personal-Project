@@ -30,7 +30,7 @@ const WriteDiary = () => {
       )};
     const sendDiary = () => {
       Axios({
-        method: "POST",
+        method: "PUT",
         data:diary,
         withCredentials: true,
         url: "http://localhost:8080/write",
