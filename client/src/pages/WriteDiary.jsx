@@ -5,38 +5,71 @@ import Axios from "axios";
 import { Link } from "react-router-dom";
 import Header from "./fragments/Header"
 import querystring from "querystring";
-
+const date=require("../logicFunctions/date.js");
+let todayDate=date.numericDate();
 const WriteDiary = () => {
-
+  const [diary, setdiary] = useState({
+    diary:"",
+    day:"",
+    stringDate:"",
+    numericDate:""
+  });
+  const handleChange = (e) => {
     
+    setdiary((prev) => ({ ...prev, [e.target.name]: e.target.value }));}
+
+  const acquireDiary =  () => {
+       Axios({
+        method: "GET",
+        withCredentials: true,
+        url: "http://localhost:8080/find/"+todayDate,
+      }).then((res) => {
+        console.log(res.data);
+        setdiary(res.data)
+      }
+      )};
+    const sendDiary = () => {
+      Axios({
+        method: "POST",
+        data:diary,
+        withCredentials: true,
+        url: "http://localhost:8080/write",
+      }).then((res) => {
+        console.log(res.data);
+      }
+      )};
+
+    useEffect(() => {
+      acquireDiary();
+    }, []);
     
     return (
       <div>
       
       <Header/>
-      {/* <div class="container-fluid">
+      <div class="container-fluid">
 
 <div class="container">
   <div class="row">
     <div class="col">
-      <%= stringDate%>
+      {diary.stringDate}
     </div>
     <div class="col">
-    <%= day%>
+    {diary.day}
     </div>
   </div>
 
 </div>
-<form action="/write" method="post">
+
 <div >
-    <textarea type="text" name="content" rows="8" cols="130"><%= post%></textarea>
+    <textarea type="text" name="diary" rows="8" cols="130" onChange={handleChange}>{diary.diary}</textarea>
 </div>
 
 <div >
-  <button type="submit" name="numericDate" value="<%= numericDate%> ">save</button>
+  <button  onClick={sendDiary} >save</button>
 </div>
-</form>
-</div> */}
+
+</div>
       </div>
     );
   };
@@ -44,4 +77,4 @@ const WriteDiary = () => {
   export default WriteDiary;
 
 
-// <%- include("partials/footer") -%>
+

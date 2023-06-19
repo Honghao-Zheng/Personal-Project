@@ -8,7 +8,6 @@ function Login() {
 
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [data, setData] = useState(null);
   const login = () => {
    
     Axios({

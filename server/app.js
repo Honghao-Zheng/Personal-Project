@@ -2,15 +2,18 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
+const date=require(__dirname+"/date.js");
 const passportLocal = require("passport-local").Strategy;
 const cookieParser = require("cookie-parser");
-const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const passportLocalMongoose = require("passport-local-mongoose");
-
+// const ejs = require("ejs");
 const app = express();
 // const User = require("./user");
+// app.set("view engine","ejs");
+// app.use(express.static("public"));
+// const defaultDiary="Write something for the day...";
 //----------------------------------------- END OF IMPORTS---------------------------------------------------
 mongoose.connect(
   "mongodb://localhost:27017/diaryDB",
@@ -51,8 +54,8 @@ const diary={
   diary:String
 };
 const user = new mongoose.Schema ({
-  username: String,
-  password: String,
+  // username: String,
+  // password: String,
   secrets:[diary]
 });
 
@@ -122,22 +125,9 @@ app.get("/user", (req, res) => {
 //Start Server
 
 
-// const express = require('express');
-// const ejs = require("ejs");
-// const bodyParser=require("body-parser");
-// const date=require(__dirname+"/date.js");
-// const mongoose=require("mongoose");
-// const session = require('express-session');
-// const passport = require("passport");
-// const passportLocalMongoose = require("passport-local-mongoose");
-// const app=express();
-// const cookieParser=require("cookie-parser");
-// const cors =require("cors");
-// const defaultDiary="Write something for the day...";
-// // set the view engine to ejs
-// app.set("view engine","ejs");
-// //To use multiple static assets directories
-// app.use(express.static("public"));
+
+
+
 
 
 
@@ -169,10 +159,10 @@ function infoOfUserSignedIn(request){
 //   return res.json(infoOfUserSignedIn(req));
 // });
 
-// app.get("/write",function(req,res){
-//   let todayDate=date.numericDate();
-//   res.redirect("/write/"+todayDate);
-// });
+app.get("/write",function(req,res){
+  let todayDate=date.numericDate();
+  res.json(todayDate);
+});
 
 // app.get("/login",function(req,res){
 //   res.render("login",infoOfUserSignedIn(req));
@@ -199,6 +189,75 @@ function infoOfUserSignedIn(request){
 // app.get("/contact", function(req,res){
 //   res.render("contact",infoOfUserSignedIn(req));
 // });
+
+app.get("/find/:diaryDate",function(req,res){
+  const numericDate=req.params.diaryDate;
+  const weekday=date.findDateString(numericDate).weekday;
+  const dateString=date.findDateString(numericDate).date;
+  let diary;
+  let isDiaryExist=false;
+ 
+  if (!req.isAuthenticated()){
+    res.send("user is not authenticated");
+  } else {
+     const userID=req.user.id;
+     User.findById(userID,function(err,foundUser){
+       if (err){
+         console.log(err);
+       } else{
+         if (!foundUser){
+           console.log("cannot find user");
+         }else{
+           let allDiaries=foundUser.secrets;
+            allDiaries.forEach(diaryOfTheDay=>{
+               if (diaryOfTheDay.date===numericDate){
+                 diary=diaryOfTheDay.diary;
+                 isDiaryExist=true;
+               } 
+             });
+            if(!isDiaryExist) {
+                  const newDiary=new Diary({
+                    date:numericDate,
+                    diary:""
+                  });
+                foundUser.secrets.push(newDiary);
+                foundUser.save();
+                diary=newDiary.diary
+              }
+                res.json({
+                  stringDate:dateString, day:weekday, diary:diary,numericDate:numericDate
+                });
+         }
+       }
+     });
+  }
+}
+)
+
+app.post("/write",function(req,res){
+  console.log(req.body);
+  const numericDate=req.body.numericDate.slice(0,10);
+  const content=req.body.diary;
+  const userID=req.user.id;
+  User.findById(userID,function(err,foundUser){
+    if (err){
+      console.log(err);
+    } else{
+      if (!foundUser){
+        console.log("cannot find user");
+      }else{
+        let allDiaries=foundUser.secrets;
+        allDiaries.forEach(diaryOfTheDay=>{
+            if (diaryOfTheDay.date===numericDate){
+              diaryOfTheDay.diary=content;
+            }
+          });
+          foundUser.save();
+          res.send("Diary saved"); 
+      }
+    }
+  });
+});
 
 // app.get("/read/:diaryDate",function(req,res){
 //   const numericDate=req.params.diaryDate;
@@ -252,17 +311,23 @@ function infoOfUserSignedIn(request){
 //  let diaryExist=false;
 //  const weekday=date.findDateString(numericDate).weekday;
 //  const dateString=date.findDateString(numericDate).date;
+//  console.log("req.isAuthenticated(): "+req.isAuthenticated())
 //  if (!req.isAuthenticated()){
-//    res.redirect("/login");
+//    res.json("user is not authenticated");
 //  }else{
 //  const userID=req.user.id;
+//  console.log("userID: "+userID)
+
 //  User.findById(userID,function(err,foundUser){
 //    if (err){
+    
 //      console.log(err);
 //    } else{
 //      if (!foundUser){
 //        console.log("cannot find user");
 //      }else{
+//       console.log("foundUser: "+foundUser);
+//       console.log("foundUser secrect: "+foundUser.secrets.length);
 //        let allDiaries=foundUser.secrets;
 //        if (allDiaries.length !==0){
 //          allDiaries.forEach(diaryOfTheDay=>{
@@ -276,16 +341,21 @@ function infoOfUserSignedIn(request){
 //          });
 //        }
 //        if(!diaryExist){
+//         console.log("diary does not exist");
+
 //               const newDiary=new Diary({
 //                 date:numericDate,
 //                 diary:""
 //               });
+//               console.log("newDiary: "+newDiary)
 //               foundUser.secrets.push(newDiary);
+//               console.log("foundUser: "+foundUser)
 //             foundUser.save();
-//             res.render("write",Object.assign(
-//               infoOfUserSignedIn(req),
-//               {stringDate:dateString, day:weekday, diary:newDiary.diary,numericDate:numericDate}
-//             ));
+//             res.send("new diary created");
+//             // res.render("write",Object.assign(
+//             //   infoOfUserSignedIn(req),
+//             //   {stringDate:dateString, day:weekday, diary:newDiary.diary,numericDate:numericDate}
+//             // ));
 //           }
 
 //      }
@@ -348,30 +418,6 @@ function infoOfUserSignedIn(request){
 // //     });
 // // });
 
-// app.post("/write",function(req,res){
-//   const numericDate=req.body.numericDate.slice(0,10);
-//   const content=req.body.content;
-//   const userID=req.user.id;
-//   User.findById(userID,function(err,foundUser){
-//     if (err){
-//       console.log(err);
-//     } else{
-//       if (!foundUser){
-//         console.log("cannot find user");
-//       }else{
-//         let allPosts=foundUser.secrets;
-//           allPosts.forEach(postOfTheDay=>{
-//             if (postOfTheDay.date===numericDate){
-//               postOfTheDay.post=content;
-//               foundUser.save();
-//               res.redirect("/read/"+numericDate);
-//             }
-//           });
-
-//       }
-//     }
-//   });
-// });
 
 
 // app.post("/manage", function(req,res){
@@ -388,10 +434,10 @@ function infoOfUserSignedIn(request){
 //    });
 
 
-
-
-
-
 app.listen(8080,function(){
   console.log("start server port 8080");
 });
+
+
+
+

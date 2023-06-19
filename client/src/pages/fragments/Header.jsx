@@ -27,8 +27,8 @@ function Authentication(props){
     } else{
         return (
         <div>
-            <li ><Link to="/login">Login</Link></li>
-            <li ><Link>Register</Link></li>
+            <li ><Link to="/login" >Login</Link></li>
+            <li ><Link to="/register">Register</Link></li>
         </div>
         )
     }
@@ -44,15 +44,12 @@ function Header(){
       url: "http://localhost:8080/user",
     }).then((res) => {
       setData(res.data);
-      console.log(res);
+      console.log(res.data);
     });
   };
     useEffect(() => {
       getUser();
     }, []);
-
-
-  
 
     return (
         
