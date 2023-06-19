@@ -91,16 +91,21 @@ app.post("/login", (req, res, next) => {
     }
   })(req, res, next);
 });
-
-app.post('/logout', function(req, res, next){
-  console.log(req.isAuthenticated())
+app.get("/logout", function(req, res){
   req.logout();
-  req.logout(function(err) {
-    console.log(req.isAuthenticated());
-    if (err) { return next(err); }
-    res.send("Logout successfully");
+  res.send("Logout successfully")
   });
-});
+
+
+  
+// app.get("/logout", function(req, res, next){
+//   console.log(req.isAuthenticated())
+//   req.logout(function(err) {
+//     console.log(req.isAuthenticated());
+//     if (err) { return next(err); }
+//     res.send("Logout successfully");
+//   });
+// });
 
 app.post("/register", (req, res) => {
   User.register({username: req.body.username}, req.body.password, function(err, user){
@@ -195,6 +200,9 @@ app.put("/write",function(req,res){
     }
   });
 });
+app.listen(8080,function(){
+  console.log("start server port 8080");
+});
 
 
 // app.get("/manage",function(req,res){
@@ -230,9 +238,6 @@ app.put("/write",function(req,res){
 //    });
 
 
-app.listen(8080,function(){
-  console.log("start server port 8080");
-});
 
 
 

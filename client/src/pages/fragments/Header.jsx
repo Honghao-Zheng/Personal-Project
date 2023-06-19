@@ -8,11 +8,12 @@ import axios from "axios";
 function Authentication(props){
   const logout = () => {
     Axios({
-      method: "POST",
+      method: "GET",
       withCredentials: true,
       url: "http://localhost:8080/logout",
     }).then((res) => {
-      console.log(res);
+      console.log(res.data);
+      window.location.reload();
     });
   };
   
