@@ -50,8 +50,15 @@ app.use(passport.session());
 
 
 const diary={
-  date:String,
-  diary:String
+  date:{
+    numericDate:String, 
+    stringDate: String,
+    day:String
+  },
+  content:String,
+  isEmpty:Boolean,
+  hashTags:Array,
+  score: Number
 };
 const user = new mongoose.Schema ({
   // username: String,
@@ -91,21 +98,120 @@ app.post("/login", (req, res, next) => {
     }
   })(req, res, next);
 });
+
+
 app.get("/logout", function(req, res){
   req.logout();
   res.send("Logout successfully")
   });
 
 
+  app.get("/findAll",function(req,res){
+    console.log("find all called")
+    if (!req.isAuthenticated()){
+      res.send("Unauthenticated");
+    } else {
+       const userID=req.user.id;
+       User.findById(userID,function(err,foundUser){
+         if (err){
+           console.log(err);
+         } else{
+           if (!foundUser){
+             console.log("cannot find user");
+           }else{
+             let allDiaries=foundUser.secrets;
+             console.log("allDiaries: "+allDiaries)
+            res.send(allDiaries);
+           }
+          }
+        })
+      }
+    })
+
+  app.get("/read/:diaryDate",function(req,res){
+    const numericDate=req.params.diaryDate;
+    const day=date.findDateString(numericDate).day;
+    const stringDate=date.findDateString(numericDate).date;
+    let diary;
+    let isDiaryExist=false;
   
-// app.get("/logout", function(req, res, next){
-//   console.log(req.isAuthenticated())
-//   req.logout(function(err) {
-//     console.log(req.isAuthenticated());
-//     if (err) { return next(err); }
-//     res.send("Logout successfully");
-//   });
-// });
+    if (!req.isAuthenticated()){
+      res.send("Unauthenticated");
+    } else {
+       const userID=req.user.id;
+       User.findById(userID,function(err,foundUser){
+         if (err){
+           console.log(err);
+         } else{
+           if (!foundUser){
+             console.log("cannot find user");
+           }else{
+             let allDiaries=foundUser.secrets;
+          
+              allDiaries.forEach(diaryOfTheDay=>{
+                 if (diaryOfTheDay.date.numericDate===numericDate){
+                  diary=diaryOfTheDay;
+                   isDiaryExist=true;
+                 } 
+               });
+              if(!isDiaryExist) {
+                    const newDiary=new Diary({
+                      date:{
+                        numericDate:numericDate, 
+                        stringDate: stringDate,
+                        day:day
+                      },
+                      content:"",
+                      isEmpty:true,
+                      hashTags:[],
+                      score: 5
+                    });
+                  foundUser.secrets.push(newDiary);
+                  foundUser.save();
+                  diary=newDiary
+             
+                }
+                console.log(diary)
+                  res.json(diary);
+           }
+         }
+       });
+    }
+  }
+  )
+  
+  app.put("/write",function(req,res){
+    const numericDate=req.body.date.numericDate.slice(0,10);
+    const content=req.body.content;
+    const userID=req.user.id;
+    User.findById(userID,function(err,foundUser){
+      if (err){
+        console.log(err);
+      } else{
+        if (!foundUser){
+          console.log("cannot find user");
+        }else{
+          let allDiaries=foundUser.secrets;
+          allDiaries.forEach(diaryOfTheDay=>{
+              if (diaryOfTheDay.date.numericDate===numericDate){
+                diaryOfTheDay.content=content;
+                if(content){
+                  diaryOfTheDay.isEmpty=false;
+                }
+              }
+            });
+            foundUser.save();
+            res.send("Diary saved"); 
+        }
+      }
+    });
+  });
+
+  
+  app.listen(8080,function(){
+    console.log("start server port 8080");
+  });
+
 
 app.post("/register", (req, res) => {
   User.register({username: req.body.username}, req.body.password, function(err, user){
@@ -132,77 +238,7 @@ app.get("/user", (req, res) => {
 
 
 
-app.get("/find/:diaryDate",function(req,res){
-  const numericDate=req.params.diaryDate;
-  const weekday=date.findDateString(numericDate).weekday;
-  const dateString=date.findDateString(numericDate).date;
-  let diary;
-  let isDiaryExist=false;
- 
-  if (!req.isAuthenticated()){
-    res.send("user is not authenticated");
-  } else {
-     const userID=req.user.id;
-     User.findById(userID,function(err,foundUser){
-       if (err){
-         console.log(err);
-       } else{
-         if (!foundUser){
-           console.log("cannot find user");
-         }else{
-           let allDiaries=foundUser.secrets;
-            allDiaries.forEach(diaryOfTheDay=>{
-               if (diaryOfTheDay.date===numericDate){
-                 diary=diaryOfTheDay.diary;
-                 isDiaryExist=true;
-               } 
-             });
-            if(!isDiaryExist) {
-                  const newDiary=new Diary({
-                    date:numericDate,
-                    diary:""
-                  });
-                foundUser.secrets.push(newDiary);
-                foundUser.save();
-                diary=newDiary.diary
-              }
-                res.json({
-                  stringDate:dateString, day:weekday, diary:diary,numericDate:numericDate
-                });
-         }
-       }
-     });
-  }
-}
-)
 
-app.put("/write",function(req,res){
-  console.log(req.body);
-  const numericDate=req.body.numericDate.slice(0,10);
-  const content=req.body.diary;
-  const userID=req.user.id;
-  User.findById(userID,function(err,foundUser){
-    if (err){
-      console.log(err);
-    } else{
-      if (!foundUser){
-        console.log("cannot find user");
-      }else{
-        let allDiaries=foundUser.secrets;
-        allDiaries.forEach(diaryOfTheDay=>{
-            if (diaryOfTheDay.date===numericDate){
-              diaryOfTheDay.diary=content;
-            }
-          });
-          foundUser.save();
-          res.send("Diary saved"); 
-      }
-    }
-  });
-});
-app.listen(8080,function(){
-  console.log("start server port 8080");
-});
 
 
 // app.get("/manage",function(req,res){

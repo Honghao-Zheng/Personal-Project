@@ -21,11 +21,11 @@ function Authentication(props){
         return (
             
             <div>
-            
                 <li >Hi {props.username}</li>
                 <li onClick={logout}><Link to="/">Logout</Link></li>
             </div>
         )
+        
     } else{
         return (
         <div>
@@ -46,11 +46,13 @@ function Header(){
       url: "http://localhost:8080/user",
     }).then((res) => {
       setData(res.data);
+      
       console.log(res.data);
     });
   };
     useEffect(() => {
       getUser();
+ 
     }, []);
 
     return (
