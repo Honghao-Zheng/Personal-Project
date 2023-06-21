@@ -10,23 +10,9 @@ import ManageDiary from "./pages/ManageDiary";
 import Register from "./pages/Register";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+const date = require("./logicFunctions/date.js");
 function App() {
-//   const [authentication, setAuthentication] = useState({
-//     userName:null,
-//     isLogin:false
-// });
 
-// useEffect(() => {
-//   const fetchLoginInfo = async () => {
-//     try {
-//       const res = await axios.get("http://localhost:8080");
-//       setAuthentication(res.data);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-//   fetchLoginInfo();
-// }, []);
 
   return (
     <div >

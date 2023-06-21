@@ -164,7 +164,7 @@ app.get("/logout", function(req, res){
                       content:"",
                       isEmpty:true,
                       hashTags:[],
-                      score: 5
+                      score: null
                     });
                   foundUser.secrets.push(newDiary);
                   foundUser.save();
@@ -172,7 +172,7 @@ app.get("/logout", function(req, res){
              
                 }
                 console.log(diary)
-                  res.json(diary);
+                res.json(diary);
            }
          }
        });
@@ -183,7 +183,9 @@ app.get("/logout", function(req, res){
   app.put("/write",function(req,res){
     const numericDate=req.body.date.numericDate.slice(0,10);
     const content=req.body.content;
+    const score=req.body.score;
     const userID=req.user.id;
+    
     User.findById(userID,function(err,foundUser){
       if (err){
         console.log(err);
@@ -195,8 +197,11 @@ app.get("/logout", function(req, res){
           allDiaries.forEach(diaryOfTheDay=>{
               if (diaryOfTheDay.date.numericDate===numericDate){
                 diaryOfTheDay.content=content;
+                diaryOfTheDay.score=score;
                 if(content){
                   diaryOfTheDay.isEmpty=false;
+                } else {
+                  diaryOfTheDay.isEmpty=true;
                 }
               }
             });
@@ -207,10 +212,7 @@ app.get("/logout", function(req, res){
     });
   });
 
-  
-  app.listen(8080,function(){
-    console.log("start server port 8080");
-  });
+
 
 
 app.post("/register", (req, res) => {
@@ -234,45 +236,9 @@ app.get("/user", (req, res) => {
 //----------------------------------------- END OF ROUTES---------------------------------------------------
 //Start Server
 
-
-
-
-
-
-
-
-// app.get("/manage",function(req,res){
-//   if (!req.isAuthenticated){
-//     res.redirect("/login");
-//   } else {
-//     res.render("manage",infoOfUserSignedIn(req));
-//   }
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-// app.post("/manage", function(req,res){
-//   const postDate=req.body.numericDate;
-//   res.redirect("/read/"+postDate);
-// });
-
-
-
-
-// app.post("/read",function(req,res){
-//      const numericDate=req.body.numericDate.slice(0,10);
-//      res.redirect("/write/"+numericDate);
-//    });
-
+app.listen(8080,function(){
+  console.log("start server port 8080");
+});
 
 
 
