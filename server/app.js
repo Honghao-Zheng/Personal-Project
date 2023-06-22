@@ -107,7 +107,6 @@ app.get("/logout", function(req, res){
 
 
   app.get("/findAll",function(req,res){
-    console.log("find all called")
     if (!req.isAuthenticated()){
       res.send("Unauthenticated");
     } else {
@@ -120,7 +119,7 @@ app.get("/logout", function(req, res){
              console.log("cannot find user");
            }else{
              let allDiaries=foundUser.secrets;
-             console.log("allDiaries: "+allDiaries)
+            
             res.send(allDiaries);
            }
           }
@@ -171,7 +170,7 @@ app.get("/logout", function(req, res){
                   diary=newDiary
              
                 }
-                console.log(diary)
+               
                 res.json(diary);
            }
          }
@@ -186,7 +185,6 @@ app.get("/logout", function(req, res){
     const score=req.body.score;
     const hashTags=req.body.hashTags;
     const userID=req.user.id;
-    
     User.findById(userID,function(err,foundUser){
       if (err){
         console.log(err);
@@ -215,7 +213,37 @@ app.get("/logout", function(req, res){
   });
 
 
+app.delete("/remove/:diaryDate",function(req,res){
+  const numericDate=req.params.diaryDate;
+  console.log("fremove called: "+numericDate)
 
+    if (!req.isAuthenticated()){
+      res.send("Unauthenticated");
+    } else {
+       const userID=req.user.id;
+       User.findById(userID,function(err,foundUser){
+         if (err){
+           console.log(err);
+         } else{
+           if (!foundUser){
+             console.log("cannot find user");
+           }else{
+             let allDiaries=foundUser.secrets;
+             for (let diaryIndex=0;diaryIndex<allDiaries.length;diaryIndex++){
+              if (allDiaries[diaryIndex].date.numericDate===numericDate){
+                allDiaries.splice(diaryIndex,1)
+              }
+             }
+              
+               foundUser.save();
+                res.send("Diary Deleted");
+           }
+           
+         }
+       });
+    }
+  
+})
 
 app.post("/register", (req, res) => {
   User.register({username: req.body.username}, req.body.password, function(err, user){
