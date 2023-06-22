@@ -19,20 +19,36 @@ const WriteDiary = (props) => {
     content: "",
     isEmpty: true,
     hashTags: [],
-    score: null,
+    score: 0,
   });
 
-  const [writtingMode, setWrittingMode]=useState(false)
+  const [writtingMode, setWrittingMode] = useState(false);
+  const [hashtag, setHashtag] = useState("");
 
-  const changeDate=(e)=>{
-    acquireDiary(e.target.value)
-
-  }
+  const changeDate = (e) => {
+    acquireDiary(e.target.value);
+  };
   const handleChange = (e) => {
-    setdiary((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (e.target.name === "hashtag") {
+      setHashtag(e.target.value);
+    } else {
+      setdiary((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    }
   };
 
-  
+  const addHashtag = (e) => {
+   
+    let newHashtags = diary.hashTags;
+    newHashtags.push(hashtag);
+    setdiary((prev) => ({ ...prev, [e.target.name]: newHashtags }));
+  };
+
+  const deleteTag=(e)=>{
+    
+    let newHashtags = diary.hashTags;
+    newHashtags.splice(e.target.id,1)
+    setdiary((prev) => ({ ...prev, [e.target.name]: newHashtags }));
+  }
 
   const acquireDiary = (date) => {
     Axios({
@@ -64,7 +80,7 @@ const WriteDiary = (props) => {
     return (
       <div>
         <Header />
-      
+
         <div class="container-fluid">
           <div class="container">
             <div class="row">
@@ -72,45 +88,70 @@ const WriteDiary = (props) => {
               <div class="col">{diary.date.day}</div>
               <div class="col">
                 Rating of the day:{" "}
-                {writtingMode?<input
-                  name="score"
-                  type="number"
-                  size="3"
-                  onChange={handleChange}
-                  value={diary.score}
-                />: diary.score}
+                {writtingMode ? (
+                  <input
+                    name="score"
+                    type="number"
+                    size="3"
+                    onChange={handleChange}
+                    value={diary.score}
+                  />
+                ) : (
+                  diary.score
+                )}
               </div>
             </div>
           </div>
 
           <div>
-          {writtingMode?
-            <textarea
-              type="text"
-              name="content"
-              rows="8"
-              cols="130"
-              onChange={handleChange}
-              value={diary.content}
-            />: <article>
-              <p>
-              {diary.content}
-              </p>
-            </article>
-            }
+            {writtingMode ? (
+              <textarea
+                type="text"
+                name="content"
+                rows="8"
+                cols="130"
+                onChange={handleChange}
+                value={diary.content}
+              />
+            ) : (
+              <article>
+                <p>{diary.content}</p>
+              </article>
+            )}
           </div>
 
           <div>
-          {writtingMode? 
-          <button onClick={(e)=>{setWrittingMode(false);sendDiary(e)}}>save</button>:
-          <button onClick={()=>setWrittingMode(true)}>Start Writing</button>
-          }
+            {writtingMode ? (
+              <button
+                onClick={(e) => {
+                  setWrittingMode(false);
+                  sendDiary(e);
+                }}
+              >
+                save
+              </button>
+            ) : (
+              <button onClick={() => setWrittingMode(true)}>
+                Start Writing
+              </button>
+            )}
           </div>
           <div>
-            <h5>
-            Select a different date
-            </h5>
-            <input type="date" name="date" onChange={changeDate}/>
+            <div>
+              <label># Hashtag</label>
+              <input name="hashtag" type="text" onChange={handleChange} />
+              <button id="add" name="hashTags" onClick={addHashtag}>
+                +
+              </button>
+              {diary.hashTags.map((hashtag, hashtagNum) => {
+                return (<text id={hashtagNum}  name="hashTags" onClick={deleteTag}># {hashtag}</text>);
+              })}
+            </div>
+          </div>
+
+          <div>
+            <h5>Select a different date</h5>
+            <input type="date" name="date" onChange={changeDate} />
           </div>
         </div>
       </div>

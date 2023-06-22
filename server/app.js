@@ -164,7 +164,7 @@ app.get("/logout", function(req, res){
                       content:"",
                       isEmpty:true,
                       hashTags:[],
-                      score: null
+                      score: 0
                     });
                   foundUser.secrets.push(newDiary);
                   foundUser.save();
@@ -184,6 +184,7 @@ app.get("/logout", function(req, res){
     const numericDate=req.body.date.numericDate.slice(0,10);
     const content=req.body.content;
     const score=req.body.score;
+    const hashTags=req.body.hashTags;
     const userID=req.user.id;
     
     User.findById(userID,function(err,foundUser){
@@ -198,6 +199,7 @@ app.get("/logout", function(req, res){
               if (diaryOfTheDay.date.numericDate===numericDate){
                 diaryOfTheDay.content=content;
                 diaryOfTheDay.score=score;
+                diaryOfTheDay.hashTags=hashTags;
                 if(content){
                   diaryOfTheDay.isEmpty=false;
                 } else {
@@ -236,9 +238,9 @@ app.get("/user", (req, res) => {
 //----------------------------------------- END OF ROUTES---------------------------------------------------
 //Start Server
 
-app.listen(8080,function(){
-  console.log("start server port 8080");
-});
+  app.listen(8080,function(){
+    console.log("start server port 8080");
+  });
 
 
 
