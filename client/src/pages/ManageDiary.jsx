@@ -62,7 +62,7 @@ const ManageDiary = () => {
                         <div class="row">Score: {diary.score}</div>
                     </div>
                   </h5>
-                  <p class="card-text">{diary.content}</p>
+                  <p class="card-text">{diary.content.slice(0,200)}<a href={"/write/"+diary.date.numericDate}>...mroe</a></p>
                   <p class="card-text"><small class="text-muted">
                     {diary.hashTags.map((tag)=>{
                       return ("#"+tag+" ")

@@ -5,10 +5,11 @@ import Axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "./fragments/Header";
 import querystring from "querystring";
-const date = require("../logicFunctions/date.js");
-let todayDate = date.numericDate();
+import { useParams } from "react-router";
+
 
 const WriteDiary = (props) => {
+  let {selectedDate} = useParams();
   const navigate = useNavigate();
   const [diary, setdiary] = useState({
     date: {
@@ -26,6 +27,7 @@ const WriteDiary = (props) => {
   const [hashtag, setHashtag] = useState("");
 
   const changeDate = (e) => {
+    navigate("/write/"+e.target.value)
     acquireDiary(e.target.value);
   };
   const handleChange = (e) => {
@@ -35,6 +37,22 @@ const WriteDiary = (props) => {
       setdiary((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     }
   };
+
+  const Paragraphs=(props)=>{
+    var paragraphs = props.article.split('\n\n');
+    
+    return(
+      <div>
+      {paragraphs.map((p, pIndex) => {
+        return (
+          <p key={pIndex}>
+            {p}
+          </p>
+        )
+      })}
+      </div>
+    )
+  }
 
   const addHashtag = (e) => {
    
@@ -71,16 +89,18 @@ const WriteDiary = (props) => {
     });
   };
 
+  
   useEffect(() => {
-    acquireDiary(todayDate);
+    acquireDiary(selectedDate);
   }, []);
+
+  
   if (diary === "Unauthenticated") {
     navigate("/login");
   } else {
     return (
       <div>
         <Header />
-
         <div class="container-fluid">
           <div class="container">
             <div class="row">
@@ -115,7 +135,7 @@ const WriteDiary = (props) => {
               />
             ) : (
               <article>
-                <p>{diary.content}</p>
+              <Paragraphs article={diary.content}/>
               </article>
             )}
           </div>
@@ -138,13 +158,13 @@ const WriteDiary = (props) => {
           </div>
           <div>
             <div>
-              <label># Hashtag</label>
+              <label># Hashtag: </label>
               <input name="hashtag" type="text" onChange={handleChange} />
               <button id="add" name="hashTags" onClick={addHashtag}>
                 +
               </button>
               {diary.hashTags.map((hashtag, hashtagNum) => {
-                return (<text id={hashtagNum}  name="hashTags" onClick={deleteTag}># {hashtag}</text>);
+                return (<button id={hashtagNum}  name="hashTags" onClick={deleteTag}># {hashtag}</button>);
               })}
             </div>
           </div>

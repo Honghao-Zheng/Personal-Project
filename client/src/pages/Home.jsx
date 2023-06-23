@@ -5,8 +5,10 @@ import Axios from "axios";
 import { Link } from "react-router-dom";
 import Header from "./fragments/Header"
 import querystring from "querystring";
-
+const date = require("../logicFunctions/date.js");
 const Home = () => {
+  
+let todayDate = date.numericDate();
 const [writeRoute, setRoute] = useState("");
   const getUser = () => {
     Axios({
@@ -14,7 +16,7 @@ const [writeRoute, setRoute] = useState("");
       withCredentials: true,
       url: "http://localhost:8080/user",
     }).then((res) => {
-      res.data?setRoute("write"):setRoute("login")
+      res.data?setRoute("write/"+todayDate):setRoute("login")
       console.log(res.data);
     });
   };

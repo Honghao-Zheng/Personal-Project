@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const passportLocalMongoose = require("passport-local-mongoose");
+const fs = require('fs');
 // const ejs = require("ejs");
 const app = express();
 // const User = require("./user");
