@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { SERVER_URL } from "../env";
 import Axios from "axios";
 import Header from "./fragments/Header";
 import { Navigate } from "react-router-dom";
@@ -23,7 +23,7 @@ function Register() {
         password: registerUser.password,
       },
       withCredentials: true,
-      url: "http://localhost:8080/register",
+      url: SERVER_URL+"register",
     }).then((res) => {
       console.log(res);
       setData(res.data);

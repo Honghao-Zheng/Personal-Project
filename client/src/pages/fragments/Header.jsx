@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
+import { SERVER_URL } from "../../env";
 
 function Authentication(props){
   const logout = () => {
     Axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:8080/logout",
+      url: SERVER_URL+"logout",
     }).then((res) => {
       console.log(res.data);
       window.location.reload();
@@ -43,7 +44,7 @@ function Header(){
     Axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:8080/user",
+      url: SERVER_URL+"user",
     }).then((res) => {
       setData(res.data);
       

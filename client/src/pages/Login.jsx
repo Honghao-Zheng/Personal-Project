@@ -3,7 +3,7 @@ import Header from "./fragments/Header";
 import Axios from "axios";
 import { useEffect } from "react";
 import { Link, useLocation, useNavigate, Navigate } from "react-router-dom";
-
+import { SERVER_URL } from "../env";
 function Login() {
   const [data, setData] = useState(null);
   const [loginUser, setLoginUser] = useState({
@@ -23,7 +23,7 @@ function Login() {
         password: loginUser.password,
       },
       withCredentials: true,
-      url: "http://localhost:8080/login",
+      url: SERVER_URL+"login",
     }).then((res) => {
       console.log(res);
       setData(res.data)

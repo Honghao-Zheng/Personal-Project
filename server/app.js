@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors(
     {
-    origin: "http://localhost:3000", // <-- location of the react app were connecting to
+    origin: process.env.CLIENT_URL, // <-- location of the react app were connecting to
     credentials: true,
   }
   )
@@ -284,7 +284,7 @@ app.get("/user", (req, res) => {
 //----------------------------------------- END OF ROUTES---------------------------------------------------
 //Start Server
 
-  app.listen(8080,function(){
+  app.listen(process.env.PORT || 8080,function(){
     importData();
     console.log("start server port 8080");
   });

@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "./fragments/Header";
 import querystring from "querystring";
 import { useParams } from "react-router";
-
+import { SERVER_URL } from "../env";
 
 const WriteDiary = (props) => {
   let {selectedDate} = useParams();
@@ -72,7 +72,7 @@ const WriteDiary = (props) => {
     Axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:8080/read/" + date,
+      url: SERVER_URL+"read/" + date,
     }).then((res) => {
       console.log(res.data);
       setdiary(res.data);
@@ -83,7 +83,7 @@ const WriteDiary = (props) => {
       method: "PUT",
       data: diary,
       withCredentials: true,
-      url: "http://localhost:8080/write",
+      url: SERVER_URL+"write",
     }).then((res) => {
       console.log(res.data);
     });

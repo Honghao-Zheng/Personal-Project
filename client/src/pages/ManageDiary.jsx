@@ -5,7 +5,7 @@ import Axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "./fragments/Header";
 import querystring from "querystring";
-
+import { SERVER_URL } from "../env";
 const ManageDiary = () => {
   const navigate = useNavigate();
   const [diaries, setdiaries] = useState([]);
@@ -15,7 +15,7 @@ const ManageDiary = () => {
     Axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:8080/findAll",
+      url: SERVER_URL+"findAll",
     }).then((res) => {
       console.log(res.data);
       setdiaries(res.data);
@@ -25,7 +25,7 @@ const ManageDiary = () => {
     Axios({
       method: "DELETE",
       withCredentials: true,
-      url: "http://localhost:8080/remove/"+e.target.name,
+      url: SERVER_URL+"remove/"+e.target.name,
     }).then((res) => {
       console.log(res.data);
       acquireDiaries();
