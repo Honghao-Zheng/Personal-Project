@@ -76,17 +76,17 @@ const User = new mongoose.model("User", user);
 
 const testerData = JSON.parse(fs.readFileSync('./exampleData.json', 'utf-8'))
 
-// const importData = async () => {
-//   try {
-//     await User.create(testerData)
-//     console.log('data successfully imported')
-//     process.exit()
-//   } catch (error) {
-//     console.log('error', error)
-//   }
-// }
+const importData = async () => {
+  try {
+    await User.create(testerData)
+    console.log('data successfully imported')
+    process.exit()
+  } catch (error) {
+    console.log('error', error)
+  }
+}
 
-// importData();
+
 
 passport.use(User.createStrategy());
 passport.serializeUser(function(user, done) {
@@ -285,6 +285,7 @@ app.get("/user", (req, res) => {
 //Start Server
 
   app.listen(8080,function(){
+    importData();
     console.log("start server port 8080");
   });
 

@@ -10,7 +10,6 @@ import ManageDiary from "./pages/ManageDiary";
 import Register from "./pages/Register";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-const date = require("./logicFunctions/date.js");
 function App() {
 
 
