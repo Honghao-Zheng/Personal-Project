@@ -24,13 +24,13 @@ exports.getDay=function(){
 exports.findDateString=function(numericDate){
   const year=numericDate.slice(0,4);
   const month=numericDate.slice(5,6)+String(Number(numericDate.slice(6,7))-1);
-  const dayNum=numericDate.slice(8,10);
-  const event = new Date(Date.UTC(year, month, dayNum));
+  const day=numericDate.slice(8,10);
+  const event = new Date(Date.UTC(year, month, day));
   const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
   const optionsDay = { weekday: 'long'};
   const date=event.toLocaleDateString("en-UK", optionsDate);
-  const day=event.toLocaleDateString("en-UK", optionsDay);
-  return {date:date,day:day};
+  const weekday=event.toLocaleDateString("en-UK", optionsDay);
+  return {date:date,weekday:weekday};
 };
 
 exports.numericDate=function(dateString){

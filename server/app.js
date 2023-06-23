@@ -2,30 +2,23 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
-const date=require(__dirname+"/date.js");
 const passportLocal = require("passport-local").Strategy;
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const passportLocalMongoose = require("passport-local-mongoose");
 const fs = require('fs');
+const date = require('./date');
+const dotenv = require('dotenv').config();
 // const ejs = require("ejs");
 const app = express();
 // const User = require("./user");
 // app.set("view engine","ejs");
 // app.use(express.static("public"));
 // const defaultDiary="Write something for the day...";
+
 //----------------------------------------- END OF IMPORTS---------------------------------------------------
-mongoose.connect(
-  "mongodb://localhost:27017/diaryDB",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  () => {
-    console.log("Mongoose Is Connected");
-  }
-);
+
 
 // Middleware
 app.use(bodyParser.json());
@@ -49,6 +42,18 @@ app.use(cookieParser("secretcode"));
 app.use(passport.initialize());
 app.use(passport.session());
 
+//connecting mongoDB database and import example dataset
+mongoose.connect(
+  process.env.MONGODB_URL,
+
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  () => {
+    console.log("Mongoose Is Connected");
+  }
+);
 
 const diary={
   date:{
@@ -62,8 +67,6 @@ const diary={
   score: Number
 };
 const user = new mongoose.Schema ({
-  // username: String,
-  // password: String,
   secrets:[diary]
 });
 
@@ -71,6 +74,19 @@ user.plugin(passportLocalMongoose);
 const Diary=new mongoose.model("Diary", diary);
 const User = new mongoose.model("User", user);
 
+const testerData = JSON.parse(fs.readFileSync('./exampleData.json', 'utf-8'))
+
+// const importData = async () => {
+//   try {
+//     await User.create(testerData)
+//     console.log('data successfully imported')
+//     process.exit()
+//   } catch (error) {
+//     console.log('error', error)
+//   }
+// }
+
+// importData();
 
 passport.use(User.createStrategy());
 passport.serializeUser(function(user, done) {
@@ -155,6 +171,7 @@ app.get("/logout", function(req, res){
                  } 
                });
               if(!isDiaryExist) {
+                console.log("stringDate: "+stringDate)
                     const newDiary=new Diary({
                       date:{
                         numericDate:numericDate, 
