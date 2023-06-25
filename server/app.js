@@ -149,10 +149,8 @@ app.get("/logout", function(req, res){
               rangeFrom=req.query.from
               rangeTo=req.query.to
               if(findBy==="byDate"){
-                
                 service.findDiariesByDate(allDiaries, rangeFrom, rangeTo, diariesFound)
               }
-    
               if(findBy==="byScore"){
                 service.findDiariesByScore(allDiaries, rangeFrom, rangeTo, diariesFound)
               }
