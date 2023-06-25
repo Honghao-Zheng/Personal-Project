@@ -32,7 +32,7 @@ This will start the development server at http://localhost:3000. (The connection
 
 ## Finally
 Authentication =====>
-username: tester
-password: tester
+- username: tester
+- password: tester
 
 Now try it out with the preloaded dataset! 
