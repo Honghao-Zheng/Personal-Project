@@ -6,14 +6,11 @@ import { useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../env";
 
-function Footer(props){
-
-return(
+function Footer(props) {
+  return (
     <div className="centre">
-        <footer class="footer bg-dark text-light">
-            Made with ❤ by Honghao
-        </footer>
+      <footer class="footer bg-dark text-light">Made with ❤ by Honghao</footer>
     </div>
-)
+  );
 }
-export default Footer
+export default Footer;

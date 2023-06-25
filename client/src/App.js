@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Header from "./pages/fragments/Header"
+import Header from "./pages/fragments/Header";
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
@@ -12,15 +12,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Footer from "./pages/fragments/Footer";
 function App() {
-
-
   return (
-    <div >
-
-      {/* <Header
-        isLogin={authentication.isLogin}
-        userName={authentication.userName}
-      /> */}
+    <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -31,7 +24,6 @@ function App() {
           <Route path="/manage" element={<ManageDiary />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-   
         </Routes>
       </BrowserRouter>
       {/* <Footer /> */}
