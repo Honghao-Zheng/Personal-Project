@@ -20,4 +20,4 @@ npm install
 node app.js
 ```
 
-This will start the development server at http://localhost:3000.
+This will start the development server at http://localhost:3000. (The connection address of the server, client, and MongoDB can be customised in the env file under the client/src and server folders)
