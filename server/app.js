@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 const passportLocalMongoose = require("passport-local-mongoose");
 const fs = require('fs');
 const date = require('./date');
+const service = require('./service');
 const dotenv = require('dotenv').config();
 // const ejs = require("ejs");
 const app = express();
@@ -87,7 +88,6 @@ const importData = async () => {
 }
 
 
-
 passport.use(User.createStrategy());
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -98,6 +98,8 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
+
+
 
 //----------------------------------------- END OF MIDDLEWARE---------------------------------------------------
 
@@ -125,8 +127,6 @@ app.get("/logout", function(req, res){
 
   app.get("/find/:by",function(req,res){
     let findBy=req.params.by;
-    console.log("req.query: "+findBy)
-    console.log(req.query)
     let rangeFrom;
     let rangeTo;
     let allDiaries;
@@ -146,75 +146,16 @@ app.get("/logout", function(req, res){
              if(findBy==="all"){
               res.send(allDiaries);
              } else{
-              console.log("findBy: "+findBy);
               rangeFrom=req.query.from
               rangeTo=req.query.to
               if(findBy==="byDate"){
-                allDiaries.forEach(diaryOfTheDay=>{
-                  if(rangeFrom && 
-                    rangeTo && 
-                    rangeFrom<=diaryOfTheDay.date.numericDate && 
-                    rangeTo>=diaryOfTheDay.date.numericDate){
-                      console.log("greater lesser")
-                      console.log("rangeFrom: "+!rangeFrom)
-                      console.log("rangeTo: "+!rangeTo)
-                     diariesFound.push(diaryOfTheDay);
-                  } else if(!rangeFrom && 
-                    rangeTo && 
-                    rangeFrom<=diaryOfTheDay.date.numericDate){
-                      console.log(" lesser")
-                      console.log("rangeFrom: "+!rangeFrom)
-                      console.log("rangeTo: "+!rangeTo)
-                       diariesFound.push(diaryOfTheDay);
-                  } else if(rangeFrom && 
-                    !rangeTo && 
-                    rangeTo>=diaryOfTheDay.date.numericDate){
-                      console.log("greater ")
-                      console.log("rangeFrom: "+!rangeFrom)
-                      console.log("rangeTo: "+!rangeTo)
-                    diariesFound.push(diaryOfTheDay);
-                  } else {
-                    console.log("none")
-                    console.log("rangeFrom: "+rangeFrom)
-                    console.log("rangeTo: "+rangeTo)
-                    return;
-                  }
-                })
+                
+                service.findDiariesByDate(allDiaries, rangeFrom, rangeTo, diariesFound)
               }
     
               if(findBy==="byScore"){
-                allDiaries.forEach(diaryOfTheDay=>{
-                  if(rangeFrom && 
-                    rangeTo && 
-                    rangeFrom<=diaryOfTheDay.score && 
-                    rangeTo>=diaryOfTheDay.score){
-                      console.log("greater lesser")
-                      console.log("rangeFrom: "+!rangeFrom)
-                      console.log("rangeTo: "+!rangeTo)
-                     diariesFound.push(diaryOfTheDay);
-                  } else if(!rangeFrom && 
-                    rangeTo && 
-                    rangeFrom<=diaryOfTheDay.score){
-                      console.log(" lesser")
-                      console.log("rangeFrom: "+!rangeFrom)
-                      console.log("rangeTo: "+!rangeTo)
-                       diariesFound.push(diaryOfTheDay);
-                  } else if(rangeFrom && 
-                    !rangeTo && 
-                    rangeTo>=diaryOfTheDay.score){
-                      console.log("greater ")
-                      console.log("rangeFrom: "+!rangeFrom)
-                      console.log("rangeTo: "+!rangeTo)
-                    diariesFound.push(diaryOfTheDay);
-                  } else {
-                    console.log(" None")
-                    console.log("rangeFrom: "+!rangeFrom)
-                    console.log("rangeTo: "+!rangeTo)
-                    return;
-                  }
-                })
+                service.findDiariesByScore(allDiaries, rangeFrom, rangeTo, diariesFound)
               }
-
               res.send(diariesFound);
              }
             
@@ -224,73 +165,57 @@ app.get("/logout", function(req, res){
       }
     })
 
-  app.get("/read/:diaryDate",function(req,res){
-    const numericDate=req.params.diaryDate;
-    const day=date.findDateString(numericDate).day;
-    const stringDate=date.findDateString(numericDate).date;
-    let diary;
-    let isDiaryExist=false;
 
-    if (!req.isAuthenticated()){
-      res.send("Unauthenticated");
-    } else {
-       const userID=req.user.id;
-       User.findById(userID,function(err,foundUser){
-         if (err){
-           console.log(err);
-         } else{
-           if (!foundUser){
-             console.log("cannot find user");
-           }else{
-             let allDiaries=foundUser.secrets;
-          
-              allDiaries.forEach(diaryOfTheDay=>{
-                 if (diaryOfTheDay.date.numericDate===numericDate){
-                  diary=diaryOfTheDay;
-                   isDiaryExist=true;
-                 } 
-               });
-              if(!isDiaryExist) {
-                    const newDiary=new Diary({
-                      date:{
-                        numericDate:numericDate, 
-                        stringDate: stringDate,
-                        day:day
-                      },
-                      content:"",
-                      isEmpty:true,
-                      hashTags:[],
-                      score: 0
-                    });
-                  foundUser.secrets.push(newDiary);
-                  foundUser.save();
-                  diary=newDiary
-             
-                }
-               
-                res.json(diary);
-           }
-         }
-       });
-    }
-  }
-  )
+
+    app.get("/read/:diaryDate", async function(req, res) {
+      const numericDate = req.params.diaryDate;
+      const day = date.findDateString(numericDate).day;
+      const stringDate = date.findDateString(numericDate).date;
+      let diary;
+      let isDiaryExist = false;
+      try {
+        let foundUser = await service.findUser(req, res,User);    
+        let allDiaries = foundUser.secrets;
+        allDiaries.forEach(diaryOfTheDay => {
+          if (diaryOfTheDay.date.numericDate === numericDate) {
+            diary = diaryOfTheDay;
+            isDiaryExist = true;
+          }
+        });
+    
+        if (!isDiaryExist) {
+          const newDiary = new Diary({
+            date: {
+              numericDate: numericDate,
+              stringDate: stringDate,
+              day: day
+            },
+            content: "",
+            isEmpty: true,
+            hashTags: [],
+            score: 0
+          });
+    
+          foundUser.secrets.push(newDiary);
+          await foundUser.save();
+          diary = newDiary;
+        }
+        res.json(diary);
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+      }
+    });
+    
+
   
-  app.put("/write",function(req,res){
- 
+  app.put("/write",async function(req,res){
     const numericDate=req.body.date.numericDate.slice(0,10);
     const content=req.body.content;
     const score=req.body.score;
     const hashTags=req.body.hashTags;
-    const userID=req.user.id;
-    User.findById(userID,function(err,foundUser){
-      if (err){
-        console.log(err);
-      } else{
-        if (!foundUser){
-          console.log("cannot find user");
-        }else{
-          let allDiaries=foundUser.secrets;
+    let foundUser = await service.findUser(req, res, User);    
+    let allDiaries = foundUser.secrets;
           allDiaries.forEach(diaryOfTheDay=>{
               if (diaryOfTheDay.date.numericDate===numericDate){
                 diaryOfTheDay.content=content;
@@ -303,44 +228,21 @@ app.get("/logout", function(req, res){
                 }
               }
             });
-            foundUser.save();
+            await foundUser.save();
             res.send("Diary saved"); 
-        }
-      }
-    });
-  });
+  })
 
-
-app.delete("/remove/:diaryDate",function(req,res){
+app.delete("/remove/:diaryDate", async function(req,res){
   const numericDate=req.params.diaryDate;
-  console.log("fremove called: "+numericDate)
-
-    if (!req.isAuthenticated()){
-      res.send("Unauthenticated");
-    } else {
-       const userID=req.user.id;
-       User.findById(userID,function(err,foundUser){
-         if (err){
-           console.log(err);
-         } else{
-           if (!foundUser){
-             console.log("cannot find user");
-           }else{
+  let foundUser = await service.findUser(req, res,User);    
              let allDiaries=foundUser.secrets;
              for (let diaryIndex=0;diaryIndex<allDiaries.length;diaryIndex++){
               if (allDiaries[diaryIndex].date.numericDate===numericDate){
                 allDiaries.splice(diaryIndex,1)
               }
              }
-              
-               foundUser.save();
+               await foundUser.save();
                 res.send("Diary Deleted");
-           }
-           
-         }
-       });
-    }
-  
 })
 
 app.post("/register", (req, res) => {
