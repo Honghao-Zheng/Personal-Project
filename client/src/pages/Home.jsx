@@ -5,6 +5,9 @@ import Axios from "axios";
 import { Link } from "react-router-dom";
 import Header from "./fragments/Header"
 import querystring from "querystring";
+import { SERVER_URL } from "../env";
+import Footer from "./fragments/Footer";
+
 const date = require("../logicFunctions/date.js");
 const Home = () => {
   
@@ -14,7 +17,7 @@ const [writeRoute, setRoute] = useState("");
     Axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:8080/user",
+      url: SERVER_URL+"user",
     }).then((res) => {
       res.data?setRoute("write/"+todayDate):setRoute("login")
       console.log(res.data);
@@ -27,11 +30,15 @@ const [writeRoute, setRoute] = useState("");
     return (
       <div>
       <Header />
-      <div class="container">
-      <Link to={"/"+writeRoute}><button type="button" class="btn btn-primary btn-lg btn-block" >Write Diary</button></Link>
+      <div class="homeButtons">
+
+   
+      <div class="container ">
+      <Link to={"/"+writeRoute}><button type="button" class="btn btn-primary btn-lg btn-block navButton" >Write Diary</button></Link>
     </div>
     <div class="container">
-      <Link to="/manage"><button type="button" class="btn btn-secondary btn-lg btn-block" >Manage Diary</button></Link>
+      <Link to="/manage"><button type="button" class="btn btn-secondary btn-lg btn-block navButton" >Manage Diary</button></Link>
+    </div>
     </div>
       </div>
     );

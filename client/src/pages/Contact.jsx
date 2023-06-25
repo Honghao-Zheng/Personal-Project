@@ -11,7 +11,13 @@ const Contact = () => {
     return(
         <div>
             <Header />
-            <p>E-mail: Honghao@workmail.com</p>
+            <div className="container-fluid">
+            <div className="container">
+            <p className="row">E-mail: Honghao@workmail.com</p>
+            <p className="row">GitHub: <a href="https://github.com/Honghao-Zheng"> https://github.com/Honghao-Zheng</a></p>
+            </div>
+     
+            </div>
         </div>
     )
 }

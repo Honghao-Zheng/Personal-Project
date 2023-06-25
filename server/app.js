@@ -123,7 +123,14 @@ app.get("/logout", function(req, res){
   });
 
 
-  app.get("/findAll",function(req,res){
+  app.get("/find/:by",function(req,res){
+    let findBy=req.params.by;
+    console.log("req.query: "+findBy)
+    console.log(req.query)
+    let rangeFrom;
+    let rangeTo;
+    let allDiaries;
+    let diariesFound=[];
     if (!req.isAuthenticated()){
       res.send("Unauthenticated");
     } else {
@@ -135,9 +142,82 @@ app.get("/logout", function(req, res){
            if (!foundUser){
              console.log("cannot find user");
            }else{
-             let allDiaries=foundUser.secrets;
+             allDiaries=foundUser.secrets;
+             if(findBy==="all"){
+              res.send(allDiaries);
+             } else{
+              console.log("findBy: "+findBy);
+              rangeFrom=req.query.from
+              rangeTo=req.query.to
+              if(findBy==="byDate"){
+                allDiaries.forEach(diaryOfTheDay=>{
+                  if(rangeFrom && 
+                    rangeTo && 
+                    rangeFrom<=diaryOfTheDay.date.numericDate && 
+                    rangeTo>=diaryOfTheDay.date.numericDate){
+                      console.log("greater lesser")
+                      console.log("rangeFrom: "+!rangeFrom)
+                      console.log("rangeTo: "+!rangeTo)
+                     diariesFound.push(diaryOfTheDay);
+                  } else if(!rangeFrom && 
+                    rangeTo && 
+                    rangeFrom<=diaryOfTheDay.date.numericDate){
+                      console.log(" lesser")
+                      console.log("rangeFrom: "+!rangeFrom)
+                      console.log("rangeTo: "+!rangeTo)
+                       diariesFound.push(diaryOfTheDay);
+                  } else if(rangeFrom && 
+                    !rangeTo && 
+                    rangeTo>=diaryOfTheDay.date.numericDate){
+                      console.log("greater ")
+                      console.log("rangeFrom: "+!rangeFrom)
+                      console.log("rangeTo: "+!rangeTo)
+                    diariesFound.push(diaryOfTheDay);
+                  } else {
+                    console.log("none")
+                    console.log("rangeFrom: "+rangeFrom)
+                    console.log("rangeTo: "+rangeTo)
+                    return;
+                  }
+                })
+              }
+    
+              if(findBy==="byScore"){
+                allDiaries.forEach(diaryOfTheDay=>{
+                  if(rangeFrom && 
+                    rangeTo && 
+                    rangeFrom<=diaryOfTheDay.score && 
+                    rangeTo>=diaryOfTheDay.score){
+                      console.log("greater lesser")
+                      console.log("rangeFrom: "+!rangeFrom)
+                      console.log("rangeTo: "+!rangeTo)
+                     diariesFound.push(diaryOfTheDay);
+                  } else if(!rangeFrom && 
+                    rangeTo && 
+                    rangeFrom<=diaryOfTheDay.score){
+                      console.log(" lesser")
+                      console.log("rangeFrom: "+!rangeFrom)
+                      console.log("rangeTo: "+!rangeTo)
+                       diariesFound.push(diaryOfTheDay);
+                  } else if(rangeFrom && 
+                    !rangeTo && 
+                    rangeTo>=diaryOfTheDay.score){
+                      console.log("greater ")
+                      console.log("rangeFrom: "+!rangeFrom)
+                      console.log("rangeTo: "+!rangeTo)
+                    diariesFound.push(diaryOfTheDay);
+                  } else {
+                    console.log(" None")
+                    console.log("rangeFrom: "+!rangeFrom)
+                    console.log("rangeTo: "+!rangeTo)
+                    return;
+                  }
+                })
+              }
+
+              res.send(diariesFound);
+             }
             
-            res.send(allDiaries);
            }
           }
         })
@@ -150,7 +230,7 @@ app.get("/logout", function(req, res){
     const stringDate=date.findDateString(numericDate).date;
     let diary;
     let isDiaryExist=false;
-  
+
     if (!req.isAuthenticated()){
       res.send("Unauthenticated");
     } else {
@@ -171,7 +251,6 @@ app.get("/logout", function(req, res){
                  } 
                });
               if(!isDiaryExist) {
-                console.log("stringDate: "+stringDate)
                     const newDiary=new Diary({
                       date:{
                         numericDate:numericDate, 
@@ -198,6 +277,7 @@ app.get("/logout", function(req, res){
   )
   
   app.put("/write",function(req,res){
+ 
     const numericDate=req.body.date.numericDate.slice(0,10);
     const content=req.body.content;
     const score=req.body.score;

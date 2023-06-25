@@ -13,9 +13,15 @@ const About = () => {
         
         <div>
         <Header />
-        <p>
+        <div className="conatianer-fluid">
+        <div className="container">
+        <p className="row">
             You can write your diary with this web application
         </p>
+        </div>
+   
+        </div>
+
         </div>
     )
 }

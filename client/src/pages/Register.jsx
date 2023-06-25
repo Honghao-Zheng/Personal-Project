@@ -23,7 +23,7 @@ function Register() {
         password: registerUser.password,
       },
       withCredentials: true,
-      url: SERVER_URL+"register",
+      url: SERVER_URL + "register",
     }).then((res) => {
       console.log(res);
       setData(res.data);
@@ -33,13 +33,31 @@ function Register() {
   return (
     <div className="App">
       <Header />
-      <div>
-        <h1>Register</h1>
-        <input placeholder="username" name="username" onChange={handleChange} />
-        <input placeholder="password" name="password" onChange={handleChange} />
-        <button onClick={register}>Submit</button>
+      <div className="authenGroup">
+        <div>
+          <h1>Register</h1>
+          <div>
+            {" "}
+            <input
+              placeholder="username"
+              name="username"
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <input
+              placeholder="password"
+              name="password"
+              className="form-group"
+              onChange={handleChange}
+            />
+          </div>
+          <button onClick={register} className="navButton">
+            Submit
+          </button>
+        </div>
+        {data === "Authenticated" ? <Navigate to="/" replace={true} /> : null}
       </div>
-      {data==="Authenticated" ? <Navigate to="/" replace={true} /> : null}
     </div>
   );
 }

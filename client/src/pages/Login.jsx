@@ -15,7 +15,6 @@ function Login() {
   };
 
   const login = () => {
-   
     Axios({
       method: "POST",
       data: {
@@ -23,50 +22,44 @@ function Login() {
         password: loginUser.password,
       },
       withCredentials: true,
-      url: SERVER_URL+"login",
+      url: SERVER_URL + "login",
     }).then((res) => {
       console.log(res);
-      setData(res.data)
-    }
-    )
+      setData(res.data);
+    });
   };
 
-  
   return (
     <div className="App">
-       <Header />
-      <div>
-        <h1>Login</h1>
-        <input
-          placeholder="username"
-          name="username"
-          onChange={handleChange}
-        />
-        <input
-          placeholder="password"
-          name="password"
-          onChange={handleChange}
-        />
-        <button onClick={login}>Submit</button>
+      <Header />
+
+      <div className="authenGroup">
+        <div>
+          <h1>Login</h1>
+          <input
+            placeholder="username"
+            name="username"
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <input
+            placeholder="password"
+            name="password"
+            type="password"
+            onChange={handleChange}
+          />
+        </div>
+        <button onClick={login} className="navButton">
+          Submit
+        </button>
       </div>
-      {data==="Authenticated" ? <Navigate to="/" replace={true}/>:null}
+      {data === "Authenticated" ? <Navigate to="/" replace={true} /> : null}
     </div>
-
-
-      
-    
   );
 }
 
 export default Login;
-
-
-
-
-
-
-
-
 
 // import React from "react";
 // import { useEffect } from "react";
@@ -76,7 +69,7 @@ export default Login;
 // import { Link, useLocation, useNavigate, Navigate } from "react-router-dom";
 // import querystring from "querystring";
 // const Login = () => {
-  
+
 //   const [user, setUser] = useState({
 //     username: null,
 //     password: null
@@ -114,85 +107,83 @@ export default Login;
 //   };
 
 //   const handleChange = (e) => {
-    
+
 //     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    // let test=async (e) => {
+// let test=async (e) => {
 
-    //   try {
-    //     let res=await axios.get("http://localhost:8080");
-    //     console.log("onchange get root:")
-    //     console.log(res.data);
+//   try {
+//     let res=await axios.get("http://localhost:8080");
+//     console.log("onchange get root:")
+//     console.log(res.data);
 
-  
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // }
-    // test();
-  // };
-  // const login = async (e) => {
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
+// test();
+// };
+// const login = async (e) => {
 
-  //   e.preventDefault();
-  //   try {
-  //     let authen=await axios.post("http://localhost:8080/login", querystring.stringify(user),
-      
-  //     {
-  //       headers: {
-  //         'Content-Type': 'application/x-www-form-urlencoded'
-  //       }
-  //     }
-  //   );
-  //   console.log(authen);
-  //   // setAuthen(authen.data);
-    
+//   e.preventDefault();
+//   try {
+//     let authen=await axios.post("http://localhost:8080/login", querystring.stringify(user),
 
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+//     {
+//       headers: {
+//         'Content-Type': 'application/x-www-form-urlencoded'
+//       }
+//     }
+//   );
+//   console.log(authen);
+//   // setAuthen(authen.data);
 
-  //   return (
-  //     <div>
-  //     <Header
-  //     username={authentication.username}
-  //     isLogin={authentication.isLogin}
-  //     />
-  //     <div class="container">
-  // <h1>Login</h1>
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
-  // <div class="row">
-  //         <form>
-  //           <div class="form-group">
-  //             <label >Username</label>
-  //             <input  
-  //              type="text" 
-  //             name="username"
-  //             onChange={handleChange}
-  //             />
-  //           </div>
-  //           <div class="form-group">
-  //             <label >Password</label>
-  //             <input 
-  //             type="password"  
-  //             name="password"
-  //             onChange={handleChange}
-  //             />
-  //           </div>
-  //           <button onClick={login} type="submit" class="btn btn-dark">Login</button>
-  //         </form>
-  //         {authentication.isLogin && (
-  //         <Navigate to="/login" replace={true} />
-  //       )}
-  //   </div>
+//   return (
+//     <div>
+//     <Header
+//     username={authentication.username}
+//     isLogin={authentication.isLogin}
+//     />
+//     <div class="container">
+// <h1>Login</h1>
 
-  // </div>
-  // <div>
-  //       <h1>Get User</h1>
-  //       <button onClick={getUser}>Submit</button>
-  //       {data ? <h1>Welcome Back {data.username}</h1> : null}
-  //     </div>
-  //     </div>
-  //   );
-  // };
-  
-  // export default Login;
+// <div class="row">
+//         <form>
+//           <div class="form-group">
+//             <label >Username</label>
+//             <input
+//              type="text"
+//             name="username"
+//             onChange={handleChange}
+//             />
+//           </div>
+//           <div class="form-group">
+//             <label >Password</label>
+//             <input
+//             type="password"
+//             name="password"
+//             onChange={handleChange}
+//             />
+//           </div>
+//           <button onClick={login} type="submit" class="btn btn-dark">Login</button>
+//         </form>
+//         {authentication.isLogin && (
+//         <Navigate to="/login" replace={true} />
+//       )}
+//   </div>
+
+// </div>
+// <div>
+//       <h1>Get User</h1>
+//       <button onClick={getUser}>Submit</button>
+//       {data ? <h1>Welcome Back {data.username}</h1> : null}
+//     </div>
+//     </div>
+//   );
+// };
+
+// export default Login;

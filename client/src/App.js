@@ -10,6 +10,7 @@ import ManageDiary from "./pages/ManageDiary";
 import Register from "./pages/Register";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Footer from "./pages/fragments/Footer";
 function App() {
 
 
@@ -33,6 +34,7 @@ function App() {
    
         </Routes>
       </BrowserRouter>
+      {/* <Footer /> */}
     </div>
   );
 }
