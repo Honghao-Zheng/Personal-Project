@@ -38,6 +38,7 @@ function Register() {
           <h1>Register</h1>
           <div>
             {" "}
+            <label>username</label>
             <input
               placeholder="username"
               name="username"
@@ -45,7 +46,9 @@ function Register() {
             />
           </div>
           <div>
+            <label>password</label>
             <input
+              type="password"
               placeholder="password"
               name="password"
               className="form-group"

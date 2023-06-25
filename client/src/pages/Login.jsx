@@ -36,6 +36,7 @@ function Login() {
       <div className="authenGroup">
         <div>
           <h1>Login</h1>
+          <label>username</label>
           <input
             placeholder="username"
             name="username"
@@ -43,6 +44,7 @@ function Login() {
           />
         </div>
         <div>
+          <label>password</label>
           <input
             placeholder="password"
             name="password"
