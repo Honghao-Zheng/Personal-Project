@@ -15,20 +15,20 @@ git clone https://github.com/Honghao-Zheng/online-diary.git
 cd online-diary
 ```
 
-Then install the dependencies and start the development server:
-```
-cd client
-npm install
-npm start
-```
-Then install the dependencies and start the client server:
+Then install the dependencies and start the development backend server:
 ```
 cd server
 npm install
 npm start
 ```
+Then install the dependencies and start the frontend client:
+```
+cd client
+npm install
+npm start
+```
 
-This will start the development server at http://localhost:3000. (The connection address of the server, client, and MongoDB can be customised in the env file under the client/src and server folders)
+This will start the client application at http://localhost:3000. (The connection address of the server, client, and MongoDB can be customised in the env file under the client/src and server folders)
 
 ## Finally
 Authentication =====>
