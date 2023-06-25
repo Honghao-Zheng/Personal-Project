@@ -142,59 +142,55 @@ const WriteDiary = (props) => {
                 </article>
               )}
             </div>
-          <div className="row">
-            <div className="col">
-              {writtingMode ? (
-                <button
-                  className=" btn btn-outline-primary centre"
-                  onClick={(e) => {
-                    setWrittingMode(false);
-                    sendDiary(e);
-                  }}
-                >
-                  save
-                </button>
-              ) : (
-                <button
-                  class="btn btn-outline-primary centre"
-                  onClick={() => setWrittingMode(true)}
-                >
-                  Start Writing
-                </button>
-              )}
-            </div>
-            <div className="col">
-              <h5>Select a different date</h5>
-              <input type="date" name="date" onChange={changeDate} />
-            </div>
-            <div  className="col">
-              {writtingMode ? (
-                <div>
-                  <label>Hashtag: </label>
-                  <input name="hashtag" type="text" onChange={handleChange} />
-                  <button id="add" name="hashTags" onClick={addHashtag}>
-                    +
+            <div className="row">
+              <div className="col">
+                {writtingMode ? (
+                  <button
+                    className=" btn btn-outline-primary centre"
+                    onClick={(e) => {
+                      setWrittingMode(false);
+                      sendDiary(e);
+                    }}
+                  >
+                    save
                   </button>
-                  {diary.hashTags.map((hashtag, hashtagNum) => {
-                    return (
-                      <div
-                        className="hashtag"
-                        id={hashtagNum}
-                        name="hashTags"
-                        onClick={deleteTag}
-                      >
-                        # {hashtag}
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : null}
+                ) : (
+                  <button
+                    class="btn btn-outline-primary centre"
+                    onClick={() => setWrittingMode(true)}
+                  >
+                    Start Writing
+                  </button>
+                )}
+              </div>
+              <div className="col">
+                <h5>Select a different date</h5>
+                <input type="date" name="date" onChange={changeDate} />
+              </div>
+              <div className="col">
+                {writtingMode ? (
+                  <div>
+                    <label>Hashtag: </label>
+                    <input name="hashtag" type="text" onChange={handleChange} />
+                    <button id="add" name="hashTags" onClick={addHashtag}>
+                      +
+                    </button>
+                    {diary.hashTags.map((hashtag, hashtagNum) => {
+                      return (
+                        <div
+                          className="hashtag"
+                          id={hashtagNum}
+                          name="hashTags"
+                          onClick={deleteTag}
+                        >
+                          # {hashtag}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
             </div>
-
-
-            </div>
-            
-
           </div>
         </div>
       </div>
