@@ -1,4 +1,3 @@
-//jshint esversion:6
 exports.getDate=function(){
   const today=new Date();
   let option={
@@ -25,13 +24,13 @@ exports.getDay=function(){
 exports.findDateString=function(numericDate){
   const year=numericDate.slice(0,4);
   const month=numericDate.slice(5,6)+String(Number(numericDate.slice(6,7))-1);
-  const day=numericDate.slice(8,10);
-  const event = new Date(Date.UTC(year, month, day));
+  const dayNum=numericDate.slice(8,10);
+  const event = new Date(Date.UTC(year, month, dayNum));
   const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
   const optionsDay = { weekday: 'long'};
   const date=event.toLocaleDateString("en-UK", optionsDate);
-  const weekday=event.toLocaleDateString("en-UK", optionsDay);
-  return {date:date,weekday:weekday};
+  const day=event.toLocaleDateString("en-UK", optionsDay);
+  return {date:date,day:day};
 };
 
 exports.numericDate=function(dateString){
@@ -44,19 +43,3 @@ exports.numericDate=function(dateString){
   return today;
 };
 
-// let wordCounts=0;
-// let sliceFrom=0;
-// let sliceTo;
-// let p="Sound That's Engineered For You, For An Unsurpassed Calls & Music Experience. Shop Now. Our World Class Calls & Music Products Are The Perfect Sound Solution For All Your Needs. Free Standard Shipping. 1 Year Warranty. Free Technical Support. 30 Day Returns.";
-// for (let characterIndex=0; characterIndex <= p.length; characterIndex++){
-//   if (p[characterIndex]===" "){
-//     wordCounts+=1;
-//     if (wordCounts%20==0){
-//       sliceTo=characterIndex;
-//       console.log(sliceFrom,sliceTo+1);
-//       console.log(p.slice(sliceFrom,sliceTo+1));
-//       sliceFrom=sliceTo;
-//     }
-//   }}
-//
-// }

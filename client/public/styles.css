@@ -1,0 +1,88 @@
+body {
+	/* position: relative; */
+	margin: 0;
+	padding-bottom: 6rem;
+	min-height: 100%;
+  }
+.card-body {
+    min-height: 300px;
+    min-width: 300px;
+    margin-right: 5px;
+
+	&:hover{
+		transform: translateY(-10px);
+		box-shadow: none;
+		opacity: 0.9;
+	}
+}
+
+.card{
+	height: 300px;
+	width: 300px;
+}
+
+
+.footer {
+	
+	position: absolute;
+	text-align: center;
+	bottom: 0;
+	width: 100%;
+	height: 60px;
+	
+}
+
+p{
+ margin-left: 10px
+}
+
+textarea{
+	margin-left:20px
+}
+
+.manage{
+	margin-left: 20px
+}
+
+.articleBody{
+	white-space:pre-wrap
+}
+
+.homeButtons{
+	position: relative;
+	top:60px
+}
+
+.navButton{
+	margin-top: 10px;
+}
+
+.authenGroup{
+	position: relative;
+	left:50px;
+}
+input{
+	margin-left: 10px;
+	margin-right: 5px;
+	
+}
+
+.centre{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article{
+	border: 1px;
+}
+
+.hashtag{
+	display: block;
+}
+
+.toright{
+	position: relative;
+	left: 10px;
+	
+}
