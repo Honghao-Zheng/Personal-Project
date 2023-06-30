@@ -116,23 +116,13 @@ app.get("/logout", function (req, res) {
   res.send("Logout successfully");
 });
 
-app.get("/find/:by", function (req, res) {
+app.get("/find/:by", async function (req, res) {
   let findBy = req.params.by;
   let rangeFrom;
   let rangeTo;
   let allDiaries;
   let diariesFound = [];
-  if (!req.isAuthenticated()) {
-    res.send("Unauthenticated");
-  } else {
-    const userID = req.user.id;
-    User.findById(userID, function (err, foundUser) {
-      if (err) {
-        console.log(err);
-      } else {
-        if (!foundUser) {
-          console.log("cannot find user");
-        } else {
+  let foundUser = await service.findUser(req, res, User);
           allDiaries = foundUser.secrets;
           if (findBy === "all") {
             res.send(allDiaries);
@@ -157,10 +147,6 @@ app.get("/find/:by", function (req, res) {
             }
             res.send(diariesFound);
           }
-        }
-      }
-    });
-  }
 });
 
 app.get("/read/:diaryDate", async function (req, res) {
