@@ -47,9 +47,9 @@ exports.findDiariesByScore = (allDiaries, rangeFrom, rangeTo, diariesFound) => {
     let score = diaryOfTheDay.score;
     if (rangeFrom <= score && rangeTo >= score) {
       diariesFound.push(diaryOfTheDay);
-    } else if (rangeFrom <= score) {
+    } else if (rangeTo=="" && rangeFrom <= score) {
       diariesFound.push(diaryOfTheDay);
-    } else if (rangeTo >= score) {
+    } else if (rangeFrom=="" &&rangeTo >= score) {
       diariesFound.push(diaryOfTheDay);
     } else {
       return;
