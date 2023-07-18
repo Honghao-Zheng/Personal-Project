@@ -55,8 +55,9 @@ function Login() {
         <button onClick={login} className="navButton">
           Submit
         </button>
+        {data === "Authenticated" ? <Navigate to="/" replace={true} /> : null}
       </div>
-      {data === "Authenticated" ? <Navigate to="/" replace={true} /> : null}
+
     </div>
   );
 }
