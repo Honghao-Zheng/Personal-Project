@@ -12,6 +12,7 @@ function Login() {
   });
   const handleChange = (e) => {
     setLoginUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setData(null)
   };
 
   const login = () => {
@@ -32,7 +33,6 @@ function Login() {
   return (
     <div className="App">
       <Header />
-
       <div className="authenGroup">
         <div>
           <h1>Login</h1>
@@ -52,11 +52,13 @@ function Login() {
             onChange={handleChange}
           />
         </div>
+       
+        {data === "No User Exists" ? <div className="warning">user does not exist or incorrect password</div> : <div>&nbsp;</div>}
         <button onClick={login} className="navButton">
           Submit
         </button>
+        {data === "Authenticated" ? <Navigate to="/" replace={true} /> : null}
       </div>
-      {data === "Authenticated" ? <Navigate to="/" replace={true} /> : null}
     </div>
   );
 }

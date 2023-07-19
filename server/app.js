@@ -111,6 +111,24 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
+app.post("/register", (req, res) => {
+  User.register(
+    { username: req.body.username },
+    req.body.password,
+    function (err, user) {
+      if (err) {
+        console.log(err);
+        res.send("User already exist");
+      } else {
+        passport.authenticate("local")(req, res, function () {
+          // res.json(infoOfUserSignedIn(req))
+          res.send("Authenticated");
+        });
+      }
+    }
+  );
+});
+
 app.get("/logout", function (req, res) {
   req.logout();
   res.send("Logout successfully");
@@ -225,23 +243,7 @@ app.delete("/remove/:diaryDate", async function (req, res) {
   res.send("Diary Deleted");
 });
 
-app.post("/register", (req, res) => {
-  User.register(
-    { username: req.body.username },
-    req.body.password,
-    function (err, user) {
-      if (err) {
-        console.log(err);
-        res.send("User already exist or incorrect password");
-      } else {
-        passport.authenticate("local")(req, res, function () {
-          // res.json(infoOfUserSignedIn(req))
-          res.send("Authenticated");
-        });
-      }
-    }
-  );
-});
+
 
 app.get("/user", (req, res) => {
   res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.

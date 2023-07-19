@@ -12,6 +12,7 @@ function Register() {
 
   const handleChange = (e) => {
     setRegisterUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setData(null)
   };
 
   const register = () => {
@@ -37,7 +38,7 @@ function Register() {
         <div>
           <h1>Register</h1>
           <div>
-            {" "}
+
             <label>username</label>
             <input
               placeholder="username"
@@ -51,10 +52,10 @@ function Register() {
               type="password"
               placeholder="password"
               name="password"
-              className="form-group"
               onChange={handleChange}
             />
           </div>
+          {data === "User already exist" ? <div className="warning">user already exist</div> : <div>&nbsp;</div>}
           <button onClick={register} className="navButton">
             Submit
           </button>

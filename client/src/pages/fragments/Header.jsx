@@ -59,8 +59,8 @@ function Header() {
   }, []);
 
   return (
-    <div>
-      <nav class="navbar navbar-default">
+    <div class="header">
+      <nav class="navbar navbar-default navbar-light bg-light" >
         <div class="container">
           <div class="navbar-header">
             <p class="navbar-brand">DIARY</p>

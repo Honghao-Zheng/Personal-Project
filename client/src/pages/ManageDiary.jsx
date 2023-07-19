@@ -17,8 +17,8 @@ const ManageDiary = () => {
 
   const [seachedScore, setSearchedScore] = useState({
     queryMade: false,
-    from: null,
-    to: null,
+    from: "",
+    to: "",
   });
 
   const handleDateChange = (e) => {
