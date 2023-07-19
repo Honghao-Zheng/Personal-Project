@@ -37,7 +37,7 @@ function Register() {
         <div>
           <h1>Register</h1>
           <div>
-            {" "}
+
             <label>username</label>
             <input
               placeholder="username"
@@ -51,7 +51,6 @@ function Register() {
               type="password"
               placeholder="password"
               name="password"
-              className="form-group"
               onChange={handleChange}
             />
           </div>

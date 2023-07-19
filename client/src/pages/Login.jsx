@@ -57,7 +57,6 @@ function Login() {
         </button>
         {data === "Authenticated" ? <Navigate to="/" replace={true} /> : null}
       </div>
-
     </div>
   );
 }
