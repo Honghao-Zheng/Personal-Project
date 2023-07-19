@@ -12,6 +12,7 @@ function Register() {
 
   const handleChange = (e) => {
     setRegisterUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setData(null)
   };
 
   const register = () => {
@@ -54,6 +55,7 @@ function Register() {
               onChange={handleChange}
             />
           </div>
+          {data === "User already exist" ? <div className="warning">user already exist</div> : <div>&nbsp;</div>}
           <button onClick={register} className="navButton">
             Submit
           </button>

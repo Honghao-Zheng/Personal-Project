@@ -232,7 +232,7 @@ app.post("/register", (req, res) => {
     function (err, user) {
       if (err) {
         console.log(err);
-        res.send("User already exist or incorrect password");
+        res.send("User already exist");
       } else {
         passport.authenticate("local")(req, res, function () {
           // res.json(infoOfUserSignedIn(req))
