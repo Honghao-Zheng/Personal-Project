@@ -141,30 +141,20 @@ app.get("/find/:by", async function (req, res) {
   let allDiaries;
   let diariesFound = [];
   let foundUser = await service.findUser(req, res, User);
-          allDiaries = foundUser.secrets;
-          if (findBy === "all") {
-            res.send(allDiaries);
-          } else {
-            rangeFrom = req.query.from;
-            rangeTo = req.query.to;
-            if (findBy === "byDate") {
-              service.findDiariesByDate(
-                allDiaries,
-                rangeFrom,
-                rangeTo,
-                diariesFound
-              );
-            }
-            if (findBy === "byScore") {
-              service.findDiariesByScore(
-                allDiaries,
-                rangeFrom,
-                rangeTo,
-                diariesFound
-              );
-            }
-            res.send(diariesFound);
-          }
+  allDiaries = foundUser.secrets;
+  if (findBy === "all") {
+    res.send(allDiaries);
+  } else {
+    rangeFrom = req.query.from;
+    rangeTo = req.query.to;
+    if (findBy === "byDate") {
+      service.findDiariesByDate(allDiaries, rangeFrom, rangeTo, diariesFound);
+    }
+    if (findBy === "byScore") {
+      service.findDiariesByScore(allDiaries, rangeFrom, rangeTo, diariesFound);
+    }
+    res.send(diariesFound);
+  }
 });
 
 app.get("/read/:diaryDate", async function (req, res) {
@@ -242,8 +232,6 @@ app.delete("/remove/:diaryDate", async function (req, res) {
   await foundUser.save();
   res.send("Diary Deleted");
 });
-
-
 
 app.get("/user", (req, res) => {
   res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
