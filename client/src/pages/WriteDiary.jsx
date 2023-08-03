@@ -142,6 +142,7 @@ const WriteDiary = (props) => {
                 </article>
               )}
             </div>
+
             <div className="row">
               <div className="col">
                 {writtingMode ? (
